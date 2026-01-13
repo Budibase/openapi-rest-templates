@@ -103,6 +103,11 @@ paths:
         url: https://learn.microsoft.com/graph/api/shares-get?view=graph-rest-1.0
       operationId: shares.sharedDriveItem.GetSharedDriveItem
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -136,6 +141,12 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.sharedDriveItem
       summary: Update entity in shares
@@ -165,6 +176,11 @@ paths:
       summary: Delete entity from shares
       operationId: shares.sharedDriveItem.DeleteSharedDriveItem
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -186,6 +202,11 @@ paths:
       description: Identity of the user who created the item. Read-only.
       operationId: shares.GetCreatedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -228,6 +249,11 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.createdByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -260,6 +286,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.user
       summary: Update property mailboxSettings value.
@@ -292,6 +324,11 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.createdByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -344,6 +381,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.createdByUser.ServiceProvisioningErrors.GetCount-abf4
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: ConsistencyLevel
         in: header
         description: 'Indicates the requested consistency level. Documentation URL:
@@ -377,6 +419,11 @@ paths:
         url: https://learn.microsoft.com/graph/api/shares-get?view=graph-rest-1.0
       operationId: shares.GetDriveItem
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -417,6 +464,11 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.GetDriveItemContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $format
         in: query
         description: Format of the content
@@ -435,6 +487,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     put:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.driveItem
       summary: Update content for the navigation property driveItem in shares
@@ -466,6 +524,11 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.DeleteDriveItemContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -487,6 +550,11 @@ paths:
         be enumerated.
       operationId: shares.ListItems
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -542,6 +610,16 @@ paths:
         be enumerated.
       operationId: shares.GetItems
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: driveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -582,6 +660,16 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.GetItemsContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: driveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $format
         in: query
         description: Format of the content
@@ -600,6 +688,17 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     put:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: driveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.driveItem
       summary: Update content for the navigation property items in shares
@@ -631,6 +730,16 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.DeleteItemsContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: driveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -650,6 +759,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.items.GetCount-245c
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -667,6 +781,11 @@ paths:
       description: Identity of the user who last modified the item. Read-only.
       operationId: shares.GetLastModifiedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -709,6 +828,11 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.lastModifiedByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -741,6 +865,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.user
       summary: Update property mailboxSettings value.
@@ -773,6 +903,11 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.lastModifiedByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -825,6 +960,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.lastModifiedByUser.ServiceProvisioningErrors.GetCount-a885
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -842,6 +982,11 @@ paths:
       description: Used to access the underlying list
       operationId: shares.GetList
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -875,6 +1020,12 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property list in shares
@@ -904,6 +1055,11 @@ paths:
       summary: Delete navigation property list for shares
       operationId: shares.DeleteList
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -925,6 +1081,11 @@ paths:
       description: The collection of field definitions for this list.
       operationId: shares.list.ListColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -972,6 +1133,12 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to columns for shares
@@ -1003,6 +1170,16 @@ paths:
       description: The collection of field definitions for this list.
       operationId: shares.list.GetColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1036,6 +1213,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property columns in shares
@@ -1065,6 +1253,16 @@ paths:
       summary: Delete navigation property columns for shares
       operationId: shares.list.DeleteColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -1086,6 +1284,16 @@ paths:
       description: The source column for the content type column.
       operationId: shares.list.columns.GetSourceColumn
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1125,6 +1333,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.columns.GetCount-b936
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -1142,6 +1355,11 @@ paths:
       description: The collection of content types present in this list.
       operationId: shares.list.ListContentTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -1189,6 +1407,12 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to contentTypes for shares
@@ -1220,6 +1444,16 @@ paths:
       description: The collection of content types present in this list.
       operationId: shares.list.GetContentTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1253,6 +1487,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property contentTypes in shares
@@ -1282,6 +1527,16 @@ paths:
       summary: Delete navigation property contentTypes for shares
       operationId: shares.list.DeleteContentTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -1303,6 +1558,16 @@ paths:
       description: Parent contentType from which this content type is derived.
       operationId: shares.list.contentTypes.GetBase
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1344,6 +1609,16 @@ paths:
         type.
       operationId: shares.list.contentTypes.ListBaseTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -1399,6 +1674,21 @@ paths:
         type.
       operationId: shares.list.contentTypes.GetBaseTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id1
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1438,6 +1728,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.contentTypes.baseTypes.GetCount-f23a
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -1455,6 +1755,16 @@ paths:
       description: The collection of columns that are required by this content type.
       operationId: shares.list.contentTypes.ListColumnLinks
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -1502,6 +1812,17 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to columnLinks for shares
@@ -1533,6 +1854,21 @@ paths:
       description: The collection of columns that are required by this content type.
       operationId: shares.list.contentTypes.GetColumnLinks
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnLink-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1566,6 +1902,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnLink-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property columnLinks in shares
@@ -1595,6 +1947,21 @@ paths:
       summary: Delete navigation property columnLinks for shares
       operationId: shares.list.contentTypes.DeleteColumnLinks
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnLink-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -1615,6 +1982,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.contentTypes.columnLinks.GetCount-a211
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -1632,6 +2009,16 @@ paths:
       description: Column order information in a content type.
       operationId: shares.list.contentTypes.ListColumnPositions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -1686,6 +2073,21 @@ paths:
       description: Column order information in a content type.
       operationId: shares.list.contentTypes.GetColumnPositions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1725,6 +2127,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.contentTypes.columnPositions.GetCount-1b55
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -1742,6 +2154,16 @@ paths:
       description: The collection of column definitions for this content type.
       operationId: shares.list.contentTypes.ListColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -1789,6 +2211,17 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to columns for shares
@@ -1820,6 +2253,21 @@ paths:
       description: The collection of column definitions for this content type.
       operationId: shares.list.contentTypes.GetColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1853,6 +2301,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property columns in shares
@@ -1882,6 +2346,21 @@ paths:
       summary: Delete navigation property columns for shares
       operationId: shares.list.contentTypes.DeleteColumns
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -1903,6 +2382,21 @@ paths:
       description: The source column for the content type column.
       operationId: shares.list.contentTypes.columns.GetSourceColumn
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: columnDefinition-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -1942,6 +2436,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.contentTypes.columns.GetCount-db38
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -1953,6 +2457,17 @@ paths:
           $ref: '#/components/responses/error'
   /shares/{sharedDriveItem-id}/list/contentTypes/{contentType-id}/associateWithHubSites:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action associateWithHubSites
@@ -1988,6 +2503,17 @@ paths:
       x-ms-docs-operation-type: action
   /shares/{sharedDriveItem-id}/list/contentTypes/{contentType-id}/copyToDefaultContentLocation:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action copyToDefaultContentLocation
@@ -2020,6 +2546,17 @@ paths:
       x-ms-docs-operation-type: action
   /shares/{sharedDriveItem-id}/list/contentTypes/{contentType-id}/isPublished():
     get:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke function isPublished
@@ -2047,6 +2584,17 @@ paths:
       x-ms-docs-operation-type: function
   /shares/{sharedDriveItem-id}/list/contentTypes/{contentType-id}/publish:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action publish
@@ -2065,6 +2613,17 @@ paths:
       x-ms-docs-operation-type: action
   /shares/{sharedDriveItem-id}/list/contentTypes/{contentType-id}/unpublish:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: contentType-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action unpublish
@@ -2088,6 +2647,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.contentTypes.GetCount-70f5
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -2099,6 +2663,12 @@ paths:
           $ref: '#/components/responses/error'
   /shares/{sharedDriveItem-id}/list/contentTypes/addCopy:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action addCopy
@@ -2134,6 +2704,12 @@ paths:
       x-ms-docs-operation-type: action
   /shares/{sharedDriveItem-id}/list/contentTypes/addCopyFromContentTypeHub:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action addCopyFromContentTypeHub
@@ -2192,6 +2768,11 @@ paths:
         url: https://learn.microsoft.com/graph/api/contenttype-getcompatiblehubcontenttypes?view=graph-rest-1.0
       operationId: shares.sharedDriveItem.list.contentTypes.getCompatibleHubContentTypes
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -2259,6 +2840,11 @@ paths:
       description: Identity of the user who created the item. Read-only.
       operationId: shares.list.GetCreatedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2301,6 +2887,11 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.list.createdByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2333,6 +2924,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update property mailboxSettings value.
@@ -2365,6 +2962,11 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.list.createdByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -2417,6 +3019,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.createdByUser.ServiceProvisioningErrors.GetCount-7658
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -2435,6 +3042,11 @@ paths:
         Only present on document libraries.
       operationId: shares.list.GetDrive
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2475,6 +3087,11 @@ paths:
       description: All items contained in the list.
       operationId: shares.list.ListItems
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -2522,6 +3139,12 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to items for shares
@@ -2553,6 +3176,16 @@ paths:
       description: All items contained in the list.
       operationId: shares.list.GetItems
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2586,6 +3219,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property items in shares
@@ -2615,6 +3259,16 @@ paths:
       summary: Delete navigation property items for shares
       operationId: shares.list.DeleteItems
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -2636,6 +3290,16 @@ paths:
       description: Analytics about the view activities that took place on this item.
       operationId: shares.list.items.GetAnalytics
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2676,6 +3340,16 @@ paths:
       description: Identity of the user who created the item. Read-only.
       operationId: shares.list.items.GetCreatedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2718,6 +3392,16 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.list.items.createdByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2750,6 +3434,17 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update property mailboxSettings value.
@@ -2782,6 +3477,16 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.list.items.createdByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -2834,6 +3539,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.items.createdByUser.ServiceProvisioningErrors.GetCount-1b79
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -2851,6 +3566,16 @@ paths:
       description: Version information for a document set version created by a user.
       operationId: shares.list.items.ListDocumentSetVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -2898,6 +3623,17 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to documentSetVersions for shares
@@ -2929,6 +3665,21 @@ paths:
       description: Version information for a document set version created by a user.
       operationId: shares.list.items.GetDocumentSetVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -2962,6 +3713,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property documentSetVersions in shares
@@ -2991,6 +3758,21 @@ paths:
       summary: Delete navigation property documentSetVersions for shares
       operationId: shares.list.items.DeleteDocumentSetVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3013,6 +3795,21 @@ paths:
         item.
       operationId: shares.list.items.documentSetVersions.GetFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3046,6 +3843,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property fields in shares
@@ -3075,6 +3888,21 @@ paths:
       summary: Delete navigation property fields for shares
       operationId: shares.list.items.documentSetVersions.DeleteFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3090,6 +3918,22 @@ paths:
       x-ms-docs-operation-type: operation
   /shares/{sharedDriveItem-id}/list/items/{listItem-id}/documentSetVersions/{documentSetVersion-id}/restore:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentSetVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action restore
@@ -3113,6 +3957,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.items.documentSetVersions.GetCount-172d
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -3131,6 +3985,16 @@ paths:
         listItem as a driveItem
       operationId: shares.list.items.GetDriveItem
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3171,6 +4035,16 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.list.items.GetDriveItemContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $format
         in: query
         description: Format of the content
@@ -3189,6 +4063,17 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     put:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update content for the navigation property driveItem in shares
@@ -3220,6 +4105,16 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.list.items.DeleteDriveItemContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3240,6 +4135,16 @@ paths:
       description: The values of the columns set on this list item.
       operationId: shares.list.items.GetFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3273,6 +4178,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property fields in shares
@@ -3302,6 +4218,16 @@ paths:
       summary: Delete navigation property fields for shares
       operationId: shares.list.items.DeleteFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3323,6 +4249,16 @@ paths:
       description: Identity of the user who last modified the item. Read-only.
       operationId: shares.list.items.GetLastModifiedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3365,6 +4301,16 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.list.items.lastModifiedByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3397,6 +4343,17 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update property mailboxSettings value.
@@ -3429,6 +4386,16 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.list.items.lastModifiedByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -3481,6 +4448,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.items.lastModifiedByUser.ServiceProvisioningErrors.GetCount-401d
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -3492,6 +4469,17 @@ paths:
           $ref: '#/components/responses/error'
   /shares/{sharedDriveItem-id}/list/items/{listItem-id}/createLink:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action createLink
@@ -3555,6 +4543,16 @@ paths:
       summary: Invoke function getActivitiesByInterval
       operationId: shares.sharedDriveItem.list.items.listItem.getActivitiesByInterval-4c35
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -3621,6 +4619,31 @@ paths:
       summary: Invoke function getActivitiesByInterval
       operationId: shares.sharedDriveItem.list.items.listItem.getActivitiesByInterval-ad27
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: startDateTime
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: endDateTime
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -3688,6 +4711,16 @@ paths:
       description: The list of previous versions of the list item.
       operationId: shares.list.items.ListVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -3735,6 +4768,17 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to versions for shares
@@ -3766,6 +4810,21 @@ paths:
       description: The list of previous versions of the list item.
       operationId: shares.list.items.GetVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3799,6 +4858,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property versions in shares
@@ -3828,6 +4903,21 @@ paths:
       summary: Delete navigation property versions for shares
       operationId: shares.list.items.DeleteVersions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3850,6 +4940,21 @@ paths:
         item.
       operationId: shares.list.items.versions.GetFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -3883,6 +4988,22 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property fields in shares
@@ -3912,6 +5033,21 @@ paths:
       summary: Delete navigation property fields for shares
       operationId: shares.list.items.versions.DeleteFields
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -3927,6 +5063,22 @@ paths:
       x-ms-docs-operation-type: operation
   /shares/{sharedDriveItem-id}/list/items/{listItem-id}/versions/{listItemVersion-id}/restoreVersion:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItemVersion-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action restoreVersion
@@ -3952,6 +5104,16 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.items.versions.GetCount-0c45
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: listItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -3984,6 +5146,11 @@ paths:
         url: https://learn.microsoft.com/graph/api/listitem-delta?view=graph-rest-1.0
       operationId: shares.sharedDriveItem.list.items.delta-fa14
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -4050,6 +5217,16 @@ paths:
       summary: Invoke function delta
       operationId: shares.sharedDriveItem.list.items.delta-9846
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -4117,6 +5294,11 @@ paths:
       description: Identity of the user who last modified the item. Read-only.
       operationId: shares.list.GetLastModifiedByUser
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4159,6 +5341,11 @@ paths:
         locale, and time zone. Returned only on $select.
       operationId: shares.list.lastModifiedByUser.GetMailboxSettings
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4191,6 +5378,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update property mailboxSettings value.
@@ -4223,6 +5416,11 @@ paths:
         $filter (eq, not, for isResolved and serviceInstance).
       operationId: shares.list.lastModifiedByUser.ListServiceProvisioningErrors
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -4275,6 +5473,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.lastModifiedByUser.ServiceProvisioningErrors.GetCount-8cfb
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -4292,6 +5495,11 @@ paths:
       description: The collection of long-running operations on the list.
       operationId: shares.list.ListOperations
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -4339,6 +5547,12 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to operations for shares
@@ -4370,6 +5584,16 @@ paths:
       description: The collection of long-running operations on the list.
       operationId: shares.list.GetOperations
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: richLongRunningOperation-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4403,6 +5627,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: richLongRunningOperation-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property operations in shares
@@ -4432,6 +5667,16 @@ paths:
       summary: Delete navigation property operations for shares
       operationId: shares.list.DeleteOperations
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: richLongRunningOperation-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -4452,6 +5697,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.operations.GetCount-5f90
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -4469,6 +5719,11 @@ paths:
       description: The set of subscriptions on the list.
       operationId: shares.list.ListSubscriptions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/top'
       - $ref: '#/components/parameters/skip'
       - $ref: '#/components/parameters/search'
@@ -4516,6 +5771,12 @@ paths:
         operationName: listMore
       x-ms-docs-operation-type: operation
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Create new navigation property to subscriptions for shares
@@ -4547,6 +5808,16 @@ paths:
       description: The set of subscriptions on the list.
       operationId: shares.list.GetSubscriptions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: subscription-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4580,6 +5851,17 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: subscription-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Update the navigation property subscriptions in shares
@@ -4609,6 +5891,16 @@ paths:
       summary: Delete navigation property subscriptions for shares
       operationId: shares.list.DeleteSubscriptions
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: subscription-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -4624,6 +5916,17 @@ paths:
       x-ms-docs-operation-type: operation
   /shares/{sharedDriveItem-id}/list/subscriptions/{subscription-id}/reauthorize:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: subscription-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.list
       summary: Invoke action reauthorize
@@ -4648,6 +5951,11 @@ paths:
       summary: Get the number of the resource
       operationId: shares.list.subscriptions.GetCount-4363
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - $ref: '#/components/parameters/search'
       - $ref: '#/components/parameters/filter'
       responses:
@@ -4665,6 +5973,11 @@ paths:
       description: Used to access the underlying listItem
       operationId: shares.GetListItem
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4706,6 +6019,11 @@ paths:
         link
       operationId: shares.GetPermission
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4739,6 +6057,12 @@ paths:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
     patch:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.permission
       summary: Update the navigation property permission in shares
@@ -4768,6 +6092,11 @@ paths:
       summary: Delete navigation property permission for shares
       operationId: shares.DeletePermission
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -4783,6 +6112,12 @@ paths:
       x-ms-docs-operation-type: operation
   /shares/{sharedDriveItem-id}/permission/grant:
     post:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.permission
       summary: Invoke action grant
@@ -4841,6 +6176,11 @@ paths:
         instead.
       operationId: shares.GetRoot
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
@@ -4881,6 +6221,11 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.GetRootContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $format
         in: query
         description: Format of the content
@@ -4899,6 +6244,12 @@ paths:
         5XX:
           $ref: '#/components/responses/error'
     put:
+      parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       tags:
       - shares.driveItem
       summary: Update content for the navigation property root in shares
@@ -4930,6 +6281,11 @@ paths:
       description: The content stream, if the item represents a file.
       operationId: shares.DeleteRootContent
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: If-Match
         in: header
         description: ETag
@@ -4950,6 +6306,11 @@ paths:
       description: Used to access the underlying site
       operationId: shares.GetSite
       parameters:
+      - name: sharedDriveItem-id
+        in: path
+        required: true
+        schema:
+          type: string
       - name: $select
         in: query
         description: Select properties to be returned
