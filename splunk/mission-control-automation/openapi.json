@@ -1,0 +1,4802 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "3.1.0",
+    "title": "Splunk Mission Control Automation API Reference",
+    "description": "The Splunk Mission Control Automation API allows your team to automate their response to Mission Control incidents using Splunk SOAR playbooks. This API documentation corresponds to the actions available in the Mission Control block in the Splunk SOAR Visual Playbook Editor (VPE). To learn more about the Mission Control block, see [Use Splunk Mission Control data in Splunk SOAR (Cloud) playbooks](https://docs.splunk.com/Documentation/MC/Current/Detect/Playbook) in *Investigate and Respond to Threats in Splunk Mission Control*. The following APIs are not applicable for use cases outside of the Mission Control/SOAR integration. Any other use of these or other Mission Control APIs is not supported."
+  },
+  "servers": [
+    {
+      "url": "https://{stack}/servicesNS/nobody/missioncontrol",
+      "description": "The production API server.",
+      "variables": {
+        "stack": {
+          "default": "blueridge.splunkcloud.com",
+          "description": "this value is assigned by the service provider, in this example `blueridge.splunkcloud.com`"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Mission Control",
+      "x-displayName": "Mission Control"
+    }
+  ],
+  "paths": {
+    "/test_connectivity": {},
+    "/create_incident": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "create incident",
+          "actionName": "create incidents",
+          "supportsAutomation": true
+        },
+        "operationId": "create_incident",
+        "requestBody": {
+          "required": true,
+          "description": "Request payload for a single incident.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncidentRequestPayload"
+              }
+            }
+          }
+        },
+        "description": "Create an incident in Splunk Mission Control.",
+        "summary": "create incident",
+        "responses": {
+          "201": {
+            "description": "Created incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncidentSuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ]
+      }
+    },
+    "/v1/incidents/{incident_id}": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "update incident",
+          "actionName": "update incidents",
+          "supportsAutomation": true
+        },
+        "operationId": "v1_incidents_update",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the incident that the newly created event belongs to."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Update a Splunk Mission Control incident.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIncidentsRequestPayload"
+              }
+            }
+          }
+        },
+        "description": "Update a Splunk Mission Control incident.",
+        "summary": "update incident",
+        "responses": {
+          "200": {
+            "description": "Updated incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncidentSuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create_events": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "supportsAutomation": true,
+          "displayName": "create event",
+          "actionName": "create events"
+        },
+        "operationId": "create_events",
+        "summary": "create event",
+        "description": "Create events in Splunk Mission Control.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventsRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEventsSuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ]
+      }
+    },
+    "/update_events": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "supportsAutomation": true,
+          "displayName": "update event",
+          "actionName": "update events"
+        },
+        "operationId": "update_events",
+        "summary": "update event",
+        "description": "Update events in Splunk Mission Control.",
+        "requestBody": {
+          "description": "parameters",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventsRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateEventsSuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ]
+      }
+    },
+    "/set_summary_fields": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "supportsAutomation": true,
+          "displayName": "set summary fields",
+          "actionName": "set summary fields"
+        },
+        "operationId": "set_summary_fields",
+        "summary": "set summary fields",
+        "description": "Set summary fields on an incident. Fields that already exist will be updated. Fields that don’t exist yet will be created.",
+        "requestBody": {
+          "description": "parameters",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetSummaryFieldRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncidentSuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ]
+      }
+    },
+    "/remove_summary_fields": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "supportsAutomation": true,
+          "displayName": "remove summary fields",
+          "actionName": "remove summary fields"
+        },
+        "operationId": "remove_summary_fields",
+        "summary": "remove summary fields",
+        "description": "Remove summary fields. If a specified field does not exist, this action has no affect.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveSummaryFieldsRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncidentSuccessResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ]
+      }
+    },
+    "/v1/heartbeat": {},
+    "/v1/get_mc_incident_id_from_es_notable_id": {},
+    "/v1/im/enclaves": {},
+    "/v1/responsetemplates": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get response templates",
+          "actionName": "get response templates",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_response_template_get",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Used as part of pagination. Internal use only."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Used as part of pagination. Internal use only."
+          }
+        ],
+        "description": "Get all response templates within Splunk Mission Control.",
+        "summary": "get response templates",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ResponseTemplate"
+                      }
+                    },
+                    "skip": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "limit": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "total": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/responsetemplates/{template_id}": {},
+    "/v1/metadata/incidents": {},
+    "/v1/metadata/customfields": {},
+    "/v1/metadata/throttled_info": {},
+    "/v1/incidents/spl": {},
+    "/v1/incidents": {},
+    "/v1/incidents/{id}": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get incident",
+          "actionName": "get incident",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_get_by_id",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include_parent_child",
+            "x-splunk-soar-connector-gen-parameter": {
+              "hidden": true
+            },
+            "schema": {
+              "type": "string",
+              "example": "true",
+              "enum": [
+                "True",
+                "true",
+                "t",
+                "1",
+                "False",
+                "false",
+                "f",
+                "0"
+              ]
+            },
+            "required": false,
+            "description": "Optional flag to include the consolidated summary and a mapping of where these values have originated from."
+          }
+        ],
+        "description": "Retrieve an incident by the incident GUID or display ID without running a search. The response matches the data available for dispatch to automation.",
+        "summary": "get incident",
+        "responses": {
+          "200": {
+            "description": "Retrieved incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncidentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/get_phase_id": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get phase id",
+          "actionName": "get phase id",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_phase_get_by_incident_id",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_template_name",
+            "description": "The name of the response template.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "phase_name",
+            "description": "The name of the phase you want to retrieve the phase ID from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Retrieve a phase ID by providing the incident ID, phase name, and response template name. The response matches the data available for dispatch to automation.",
+        "summary": "get phase id",
+        "responses": {
+          "201": {
+            "description": "Retrieved phase ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "phase_id": {
+                      "example": "4edb5c77-0ac3-4d49-842b-19b0eff4d8fd",
+                      "description": "Retrieve the phase ID.",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/get_task_id": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get task id",
+          "actionName": "get task id",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_task_get_by_incident_id",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_template_name",
+            "description": "The name of the response template.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "phase_name",
+            "description": "The name of the phase you want to retrieve the phase ID from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "task_name",
+            "description": "The name of the task you want to retrieve the task ID from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Retrieve a task ID by providing the incident ID, phase name, and response template name. The response matches the data available for dispatch to automation.",
+        "summary": "get task id",
+        "responses": {
+          "201": {
+            "description": "Retrieved task ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "task_id": {
+                      "description": "Retrieve the task ID.",
+                      "type": "string",
+                      "example": "74730fac-1d5c-4713-bef5-d30ed1c62188"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/bulk_update": {},
+    "/v1/incidents/{id}/add_events": {},
+    "/v1/incidents/{id}/events": {},
+    "/v1/incidents/{id}/update_event": {},
+    "/v1/incidents/{id}/notes": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get notes in incident",
+          "actionName": "get notes in incident",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_get_notes",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident that the event is associated with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Keywords to be searched for in the title or content of notes.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "description": "The source type of a note. Only notes of this type will be returned.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Task",
+                "Incident",
+                "All"
+              ]
+            }
+          }
+        ],
+        "description": "Get notes from the incident.",
+        "summary": "get notes in incident",
+        "responses": {
+          "200": {
+            "description": "Get notes from the incident.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Note"
+                      }
+                    },
+                    "skip": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "limit": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "total": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "type": "ERROR",
+                      "text": "Unauthorized"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "MC_0507",
+                  "requestId": "00000000-0000-0000-0000-000000000000",
+                  "message": "Failed to deleteevent: User does not have permissions to delete the event"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add incident note",
+          "actionName": "add incident note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_add_general_note",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident that the event is associated with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotePayload"
+              }
+            }
+          }
+        },
+        "description": "Add the note to the incident.",
+        "summary": "add incident note",
+        "responses": {
+          "200": {
+            "description": "Retrieved notes from the incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "type": "ERROR",
+                      "text": "Unauthorized"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "MC_0507",
+                  "requestId": "00000000-0000-0000-0000-000000000000",
+                  "message": "Failed to deleteevent: User does not have permissions to delete the event"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/notes/{note_id}": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "update incident note",
+          "actionName": "update incident note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_update_note_in_incident",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "description": "The ID of the note from the response plan task.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "description": "The title of the note.",
+                    "type": "string",
+                    "example": "Create ticket - Task Note - 1"
+                  },
+                  "content": {
+                    "description": "The data stored within the note.",
+                    "type": "string",
+                    "example": "Note for task Create Ticket"
+                  },
+                  "files": {
+                    "description": "An array of file IDs to add to a note.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "f0ea1f3cbabf013f3e7fc4c88077aabff50c7e0847c0112a8269fc2c9a6bb2bd",
+                      "f7ec3cdc1bb01ef3507d4e814568d325c69fed63232bdc04565c5cac627027c6"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Update a note in an incident.",
+        "summary": "update incident note",
+        "responses": {
+          "200": {
+            "description": "Updated note object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "delete incident note",
+          "actionName": "delete incident note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_delete_note_in_task",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "description": "The ID of the note from the response plan task.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Delete a note in an incident.",
+        "summary": "delete incident note",
+        "responses": {
+          "200": {
+            "description": "Deleted note"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/events/{event_id}": {
+      "delete": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "delete event",
+          "actionName": "delete event",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_delete_event",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident that the event is associated with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "event_id",
+            "description": "The ID of the event to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Delete an event that is part of an incident.",
+        "summary": "delete event",
+        "responses": {
+          "200": {
+            "description": "Deleted event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteEventResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "type": "ERROR",
+                      "text": "Unauthorized"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "MC_0507",
+                  "requestId": "00000000-0000-0000-0000-000000000000",
+                  "message": "Failed to deleteevent: User does not have permissions to delete the event"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/artifacts": {},
+    "/v1/incidents/{id}/responseplans": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add response plan",
+          "actionName": "add response plan",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_apply_response_template",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "response_template_id"
+                ],
+                "properties": {
+                  "response_template_id": {
+                    "description": "The ID of the response template to be applied.",
+                    "type": "string",
+                    "example": "142ba3eb-1fd9-4cb3-a040-e139aac107ff"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Apply a response template to an incident.",
+        "summary": "add response plan",
+        "responses": {
+          "200": {
+            "description": "Applied response template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsePlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/connector/download": {},
+    "/v1/connector/metadata": {},
+    "/v1/incidents/{id}/tasks": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get tasks",
+          "actionName": "get tasks",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_tasks",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Get tasks of an incident in Splunk Mission Control.",
+        "summary": "get tasks",
+        "responses": {
+          "200": {
+            "description": "All tasks from specific incident",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IncidentTask"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/set_current_phase": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "set phase",
+          "actionName": "set phase",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_set_current_phase",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Dictionary of response plan ID and phase ID",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phase_id",
+                  "response_plan_id"
+                ],
+                "properties": {
+                  "response_plan_id": {
+                    "description": "The ID of the response plan.",
+                    "example": "c674507-50c2-4a94-b458-fdcb5eec333d",
+                    "type": "string"
+                  },
+                  "phase_id": {
+                    "description": "The ID of the response plan phase.",
+                    "type": "string",
+                    "example": "e4317f74-2ca2-4812-9805-07c7e9aeaa40"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Set the current response plan phase of an incident.",
+        "summary": "set phase",
+        "responses": {
+          "200": {
+            "description": "Updated current phase ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Current phase was set successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/get_current_phase": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get phase",
+          "actionName": "get phase",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_get_current_phase",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Get current response plan phase of an incident.",
+        "summary": "get phase",
+        "responses": {
+          "200": {
+            "description": "Returned the current response plan phase.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsePhase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/add_task_to_current_phase": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add task",
+          "actionName": "add task",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_add_task_to_current_phase",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Response task object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskPayload"
+              }
+            }
+          }
+        },
+        "description": "Add a task to the response plan phase you are currently working on.",
+        "summary": "add task",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/get_task_from_current_phase/{task_id}": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get task",
+          "actionName": "get task",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_get_task_from_current_phase",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Get a specific response plan task from the current response plan phase.",
+        "summary": "get task",
+        "responses": {
+          "200": {
+            "description": "Returned the task from the current response plan phase.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/update_task_in_current_phase/{task_id}": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "update task",
+          "actionName": "update task",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_incidents_update_task_in_current_phase",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from a response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Response Task Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskPayload"
+              }
+            }
+          }
+        },
+        "description": "Update a specific response plan task in current response plan phase.",
+        "summary": "update task",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/responseplans/reorder": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks": {},
+    "/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/reorder": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/attachments": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add task file",
+          "actionName": "add task file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_upload_an_attachment",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file_name",
+                  "data"
+                ],
+                "properties": {
+                  "file_name": {
+                    "description": "The name of the file to be uploaded. Be sure to include the file extension.",
+                    "type": "string",
+                    "example": "splunk-logo-dark.svg"
+                  },
+                  "data": {
+                    "description": "The file data. This data is base64 encoded.",
+                    "type": "string",
+                    "example": "SGksIHRoaXMgaXMgYW4gZXhhbXBsZSBvZiBhIGZpbGUncyBkYXRhIGVuY29kZWQgaW4gYmFzZTY0Lg=="
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Add an attachment to a task.",
+        "summary": "add task file",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/playbooks/{playbook_id}": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/actions/{action_id}": {},
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/attachments/{file_id}": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get task file",
+          "actionName": "get task file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_get_attachment_file_data",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "file_id",
+            "description": "The unique ID of the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Get the base64 file contents from an attachment in a task.",
+        "summary": "get task file",
+        "responses": {
+          "200": {
+            "description": "Retrieved file metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "description": "The file data.",
+                      "type": "string",
+                      "example": "SGksIHRoaXMgaXMgYW4gZXhhbXBsZSBvZiBhIGZpbGUncyBkYXRhIGVuY29kZWQgaW4gYmFzZTY0Lg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "delete task file",
+          "actionName": "delete task file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "tags": [
+          "Mission Control"
+        ],
+        "operationId": "v1_delete_attachment_file_data",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "file_id",
+            "description": "The unique ID of the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Delete the attachment from a task and from the collection, if applicable.",
+        "summary": "delete task file",
+        "responses": {
+          "200": {
+            "description": "Deleted file"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/notes": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add task note",
+          "actionName": "add task note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_add_note_to_task",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNotePayload"
+              }
+            }
+          }
+        },
+        "description": "Add a note to a task. The author and update time are populated automatically.",
+        "summary": "add task note",
+        "responses": {
+          "201": {
+            "description": "Note object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get task notes",
+          "actionName": "get task notes",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_get_all_notes_from_task",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Get all the notes from a response plan task.",
+        "summary": "get task notes",
+        "responses": {
+          "200": {
+            "description": "All notes from a specific response plan task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/responseplans/{response_plan_id}/phase/{phase_id}/tasks/{task_id}/notes/{note_id}": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "update task note",
+          "actionName": "update task note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_update_note_in_task",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "description": "The ID of the note from the response plan task.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "description": "The title of the note.",
+                    "type": "string",
+                    "example": "Create ticket - Task Note - 1"
+                  },
+                  "content": {
+                    "description": "The data stored within the note.",
+                    "type": "string",
+                    "example": "Note for task Create Ticket"
+                  },
+                  "files": {
+                    "description": "An array of file IDs to add to a note.",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "f0ea1f3cbabf013f3e7fc4c88077aabff50c7e0847c0112a8269fc2c9a6bb2bd",
+                      "f7ec3cdc1bb01ef3507d4e814568d325c69fed63232bdc04565c5cac627027c6"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Update a note in a task.",
+        "summary": "update task note",
+        "responses": {
+          "201": {
+            "description": "Updated note object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "delete task note",
+          "actionName": "delete task note",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_delete_a_note_from_task",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "response_plan_id",
+            "description": "The ID of the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phase_id",
+            "description": "The ID of the phase from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "description": "The ID of the task from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "description": "The ID of the note from the response plan task.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Delete the note and attachments from a task.",
+        "summary": "delete task note",
+        "responses": {
+          "200": {
+            "description": "Deleted note"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/files/{attachment_id}/download": {
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get file",
+          "actionName": "get file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_return_file_to_user_from_response_plan",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "attachment_id",
+            "description": "The ID of the file from the response plan.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Download an attachment added within the incident.",
+        "summary": "get file",
+        "responses": {
+          "200": {
+            "description": "Returned File",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "example": "File Returned in byte form"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/files": {
+      "post": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "add incident file",
+          "actionName": "add incident file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_upload_a_file_to_the_kv_store",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file_name",
+                  "data",
+                  "source_type"
+                ],
+                "properties": {
+                  "file_name": {
+                    "description": "The name of the uploaded file. Include the file extension.",
+                    "type": "string",
+                    "example": "Test_File.txt"
+                  },
+                  "data": {
+                    "description": "The file data. This data is base64 encoded.",
+                    "type": "string",
+                    "example": "aGkgdGhpcyBpcyBhIHRlc3QgZmlsZQ=="
+                  },
+                  "source_type": {
+                    "description": "The source type of the file.",
+                    "enum": [
+                      "Note",
+                      "Incident"
+                    ],
+                    "type": "string",
+                    "example": "Incident"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Add an attachment to the KV Store.",
+        "summary": "add incident file",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "get files in incident",
+          "actionName": "get files in incident",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_return_all_files_from_an_incident",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Return all files from an incident.",
+        "summary": "get files in incident",
+        "responses": {
+          "200": {
+            "description": "Returned file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FileObject"
+                      }
+                    },
+                    "skip": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "limit": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    },
+                    "total": {
+                      "type": "number",
+                      "description": "Used as part of pagination. Internal use only."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/files/{attachment_id}": {
+      "delete": {
+        "x-splunk-soar-connector-gen": {
+          "displayName": "delete incident file",
+          "actionName": "delete incident file",
+          "supportsAutomation": true,
+          "proxyConfiguration": {
+            "proxyPath": "/v1/internal/soar_proxy",
+            "actualPathParameter": "X-MCProxyPath"
+          }
+        },
+        "operationId": "v1_delete_a_incident_file_from_the_kv_store",
+        "tags": [
+          "Mission Control"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "74730fac-1d5c-4713-bef5-d30ed1c62188"
+          },
+          {
+            "in": "path",
+            "name": "attachment_id",
+            "description": "The attachment ID of the file to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Delete an incident file from the KV store.",
+        "summary": "delete incident file",
+        "responses": {
+          "200": {
+            "description": "Successfully deleted file"
+          },
+          "400": {
+            "description": "Bad format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-audience": "Public",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/incidents/{id}/child_incidents": {},
+    "/v1/incidents/sla_setting": {},
+    "/v1/incidents/sla_setting/{id}": {},
+    "/v1/incidents/sla_setting/sla_options": {},
+    "/v1/userpreferences": {},
+    "/v1/userpreferences/{id}": {},
+    "/v1/init": {},
+    "/v1/incidenttypes": {},
+    "/v1/incidenttypes/{incident_type}": {},
+    "/v1/incidenttypes/{incident_type}/default": {},
+    "/v1/keys": {},
+    "/admin/missioncontrol_agreements/missioncontrol": {},
+    "/admin/user-prefs/general": {},
+    "/v1/internal/authorization/user/{username}": {},
+    "/v1/internal/authorization/roles": {},
+    "/v1/internal/authentication/users": {},
+    "/v1/internal/authorization/create_repo_roles": {},
+    "/v1/soar/notification_summary": {},
+    "/v1/soar/approval": {
+      "parameters": [
+        {
+          "in": "query",
+          "name": "splunk_username",
+          "description": "Splunk username for the approval",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "query",
+          "name": "external_id",
+          "description": "MC incident external id for the approval",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/v1/soar/approval/{approval_id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "approval_id",
+          "description": "ID of the approval",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/v1/soar/internal/soar_redirection": {},
+    "/v1/soar/action_run/:id/app_runs": {},
+    "/v1/soar/app_widget": {},
+    "/v1/soar/app_widget_data": {},
+    "/v1/soar/get_container/{incident_id}": {},
+    "/v1/soar/app_resource": {},
+    "/v1/soar/system_settings": {},
+    "/v1/soar_proxy_user_token": {},
+    "/v1/customfields": {},
+    "/v1/customfields/{id}": {},
+    "/internal/soar_proxy": {},
+    "/v1/artifactconfig": {},
+    "/v1/artifacts/related_incidents": {},
+    "/v1/health_report": {}
+  },
+  "components": {
+    "schemas": {
+      "IncidentSuccessResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "The id (GUID) of the incident.",
+            "type": "string",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          }
+        },
+        "example": {
+          "id": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+        }
+      },
+      "IncidentRequestPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the incident.",
+            "type": "string",
+            "example": "Sample Threat Activity Detection"
+          },
+          "incident_origin": {
+            "description": "Where the incident came from. For example, Splunk Enterprise Security, a risk-based alerting notable, or a Splunk Mission Control incident.",
+            "type": "string",
+            "example": "ES Notable Event"
+          },
+          "description": {
+            "description": "The description of the incident.",
+            "type": "string",
+            "example": "Sample Incident for Mission Control"
+          },
+          "incident_type": {
+            "description": "The incident type of the incident. Incident types are used to categorize related incidents by use case or source.",
+            "type": "string",
+            "example": "threat investigation"
+          },
+          "disposition": {
+            "description": "The classification of the incident. For example, “True Positive - Suspicious Activity” or “False Positive - Incorrect Analytic Logic”.",
+            "type": "string",
+            "example": "True Positive - Suspicious Activity"
+          },
+          "status": {
+            "description": "The status of the incident. For example, “New” or “In Progress”.",
+            "type": "string",
+            "example": "New"
+          },
+          "assignee": {
+            "description": "The person or group assigned to the incident.",
+            "type": "string",
+            "example": "admin"
+          },
+          "urgency": {
+            "description": "The urgency of the incident. Valid choices are informational, low, medium, high, or critical.",
+            "type": "string",
+            "example": "informational",
+            "enum": [
+              "informational",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "sensitivity": {
+            "description": "The sensitivity of the incident. Valid choices are White, Green, Amber, Red, or Unassigned.",
+            "type": "string",
+            "enum": [
+              "White",
+              "Green",
+              "Amber",
+              "Red",
+              "Unassigned"
+            ],
+            "example": "Red"
+          }
+        },
+        "required": [
+          "name",
+          "incident_type"
+        ]
+      },
+      "UpdateIncidentsRequestPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the incident.",
+            "type": "string",
+            "example": "Sample Threat Activity Detection"
+          },
+          "description": {
+            "description": "The description of the incident.",
+            "type": "string",
+            "example": "Sample Incident for Mission Control"
+          },
+          "incident_type": {
+            "description": "The incident type of the incident. Incident types are used to categorize related incidents by use case or source.",
+            "type": "string",
+            "example": "threat investigation"
+          },
+          "disposition": {
+            "description": "The classification of the incident. For example, “True Positive - Suspicious Activity” or “False Positive - Incorrect Analytic Logic”.",
+            "type": "string",
+            "example": "True Positive - Suspicious Activity"
+          },
+          "status": {
+            "description": "The status of the incident. For example, “New” or “In Progress”.",
+            "type": "string",
+            "example": "New"
+          },
+          "assignee": {
+            "description": "The person or group assigned to the incident.",
+            "type": "string",
+            "example": "admin"
+          },
+          "urgency": {
+            "description": "The urgency of the incident. Valid choices are informational, low, medium, high, or critical.",
+            "type": "string",
+            "example": "informational",
+            "enum": [
+              "informational",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "sensitivity": {
+            "description": "The sensitivity of the incident. Valid choices are White, Green, Amber, Red, or Unassigned.",
+            "type": "string",
+            "enum": [
+              "White",
+              "Green",
+              "Amber",
+              "Red",
+              "Unassigned"
+            ],
+            "example": "Red"
+          }
+        }
+      },
+      "CreateEventsRequestBody": {
+        "type": "object",
+        "required": [
+          "incident_id",
+          "pairs"
+        ],
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          },
+          "pairs": {
+            "type": "array",
+            "description": "A list of fields that describe the event.",
+            "items": {
+              "type": "object",
+              "description": "A key and value pair.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the data field.",
+                  "example": "dest_country_name"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The value of the data field. Any type is accepted: string, number, array, object, or null.",
+                  "example": "8.8.8.8"
+                }
+              },
+              "example": {
+                "name": "src_ip",
+                "value": "United Kingdom"
+              }
+            }
+          }
+        }
+      },
+      "UpdateEventsRequestBody": {
+        "type": "object",
+        "required": [
+          "incident_id",
+          "event_id",
+          "pairs"
+        ],
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          },
+          "event_id": {
+            "type": "string",
+            "description": "The ID of the event that will be updated.",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          },
+          "pairs": {
+            "type": "array",
+            "description": "A list of fields that describe the event.",
+            "items": {
+              "type": "object",
+              "description": "A key and value pair.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the data field.",
+                  "example": "src_ip"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The value of the data field. Any type is accepted: string, number, array, object, or null.",
+                  "example": "8.8.8.8"
+                }
+              },
+              "example": {
+                "name": "src_ip",
+                "value": "8.8.8.8"
+              }
+            }
+          }
+        }
+      },
+      "SetSummaryFieldRequestBody": {
+        "type": "object",
+        "required": [
+          "incident_id",
+          "pairs"
+        ],
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          },
+          "pairs": {
+            "type": "array",
+            "description": "A list of fields to set on the incident.",
+            "items": {
+              "type": "object",
+              "description": "A key and value pair.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the data field. For example, “dest_country_name”.",
+                  "example": "dest_country_name"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The value of the data field. For example, “United Kingdom”.",
+                  "example": "United Kingdom"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RemoveSummaryFieldsRequestBody": {
+        "type": "object",
+        "x-splunk-soar-connector-gen-parameter": {
+          "hidden": true
+        },
+        "required": [
+          "incident_id",
+          "field_names"
+        ],
+        "properties": {
+          "incident_id": {
+            "type": "string",
+            "description": "The `id` (GUID) or the `display_id` of the incident.",
+            "example": "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+          },
+          "field_names": {
+            "type": "array",
+            "description": "The names of summary fields to remove from the incident.",
+            "items": {
+              "type": "string",
+              "example": "src_ip"
+            },
+            "example": [
+              "dest_country_name",
+              "src_country_name"
+            ]
+          }
+        }
+      },
+      "CreateEventsSuccessResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "The ID of the created event.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "189c4f74-ede9-4e71-a435-829a5e91e377"
+        }
+      },
+      "UpdateEventsSuccessResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "The ID of the updated event.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "189c4f74-ede9-4e71-a435-829a5e91e377"
+        }
+      },
+      "ResponsePlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The unique ID for the response plan.",
+            "type": "string",
+            "example": "5c674507-50c2-4a94-b458-fdcb5eec333d"
+          },
+          "version": {
+            "description": "The version of the response plan.",
+            "type": "number",
+            "example": 1
+          },
+          "is_default": {
+            "description": "Whether or not the response plan is the default plan.",
+            "type": "boolean",
+            "example": true
+          },
+          "source_template_id": {
+            "description": "The ID of the source template for this response plan.",
+            "type": "string",
+            "example": "142ba3eb-1fd9-4cb3-a040-e139aac107ff"
+          },
+          "create_time": {
+            "description": "The time the response plan was created.",
+            "type": "number",
+            "example": 1676492834.50028
+          },
+          "update_time": {
+            "description": "The time the response plan was last updated.",
+            "type": "number",
+            "example": 1676492834.500499
+          },
+          "name": {
+            "description": "The name of the response plan.",
+            "type": "string",
+            "example": "Suspicious Email"
+          },
+          "description": {
+            "description": "The description of the response plan.",
+            "type": "string",
+            "example": "There are many ways in which attackers can use email to gain a foothold in an organization or advance an existing campaign. This response template guides an analyst through the process of investigating and remediating several of these methods."
+          },
+          "template_status": {
+            "description": "The status of the response plan. For example, “In Progress”.",
+            "type": "string",
+            "example": "published"
+          },
+          "creator": {
+            "description": "The person who created this plan.",
+            "type": "string",
+            "example": "Splunk"
+          },
+          "updated_by": {
+            "description": "The person who updated the plan.",
+            "type": "string",
+            "example": "Splunk"
+          },
+          "phases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponsePhase"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ResponseTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID for the response template.",
+            "type": "string",
+            "example": "d81ff75d-d9fe-4618-9752-e2840e5aa147"
+          },
+          "_key": {
+            "type": "string",
+            "description": "Internal use only.",
+            "example": "d81ff75d-d9fe-4618-9752-e2840e5aa147"
+          },
+          "version": {
+            "description": "The response template version.",
+            "type": "number",
+            "example": 2
+          },
+          "is_default": {
+            "description": "Whether or not the response template is the default template.",
+            "type": "boolean",
+            "example": false
+          },
+          "name": {
+            "description": "Name of the response template.",
+            "type": "string",
+            "example": "Test Response Template"
+          },
+          "description": {
+            "description": "The description of the response template.",
+            "type": "string",
+            "example": "This is a response template created by a user"
+          },
+          "template_status": {
+            "description": "The status of the response template, for example \"Published\".",
+            "type": "string",
+            "example": "Published"
+          },
+          "creator": {
+            "description": "The user who created this template.",
+            "type": "string",
+            "example": "John Doe"
+          },
+          "updated_by": {
+            "description": "The user who updated this template.",
+            "type": "string",
+            "example": "John Doe"
+          },
+          "create_time": {
+            "type": "number",
+            "description": "The time when the response template was created, as an epoch time stamp.",
+            "example": 1690743671.088105
+          },
+          "update_time": {
+            "type": "number",
+            "description": "The time when the response template was last updated, as an epoch time stamp.",
+            "example": 1690743671.088105
+          },
+          "phases": {
+            "description": "A list of phases in the response template.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseTemplatePhase"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ResponseTemplatePhase": {
+        "description": "Phase object in response plan",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the response phase.",
+            "type": "string",
+            "example": "Phase 1"
+          },
+          "order": {
+            "description": "The order of the response phase.",
+            "type": "integer",
+            "example": 1
+          },
+          "create_time": {
+            "description": "The time when the response template was created, as an epoch time stamp.",
+            "type": "number",
+            "example": 1690743671.088105
+          },
+          "update_time": {
+            "description": "The time when the response template was last updated, as an epoch time stamp.",
+            "type": "number",
+            "example": 1690743671.088105
+          },
+          "tasks": {
+            "description": "A list of tasks in the response template.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseTemplateTask"
+            }
+          }
+        }
+      },
+      "ResponseTemplateTask": {
+        "description": "Task Object in Response Plan",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the task.",
+            "example": "Create ticket"
+          },
+          "tag": {
+            "type": "string",
+            "description": "The ID of the task that maps a response plan task to its original template.",
+            "example": "d81ff75d-d9fe-4618-9752-e2840e5aa147"
+          },
+          "order": {
+            "type": "integer",
+            "description": "The order of the task in respect to all tasks in the phase.",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the task.",
+            "example": "Create any necessary tickets or tracking documents describing the initial conditions of the suspicious email investigation. As additional information is collected or actions are taken in the following tasks and phases, update the ticket with links and relevant information to allow collaboration and tracking."
+          },
+          "owner": {
+            "type": "string",
+            "description": "The owner of the task.",
+            "example": "admin"
+          },
+          "is_note_required": {
+            "type": "boolean",
+            "description": "Determines whether a note is required to be created in order to complete or end the task.",
+            "example": false
+          },
+          "start_time": {
+            "type": "number",
+            "description": "The time when the task was started.",
+            "example": 1676493726.238174
+          },
+          "end_time": {
+            "type": "number",
+            "description": "The time when the task ended.",
+            "example": 1676493727.238301
+          },
+          "suggestions": {
+            "$ref": "#/components/schemas/TaskSuggestions"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileObject"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "order"
+        ]
+      },
+      "ResponsePhase": {
+        "description": "Phase object in response plan",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the response phase.",
+            "type": "string",
+            "example": "e4317f74-2ca2-4812-9805-07c7e9aeaa40"
+          },
+          "name": {
+            "description": "The name of the response phase.",
+            "type": "string",
+            "example": "Ingestion"
+          },
+          "order": {
+            "description": "The order of the response phase.",
+            "type": "integer",
+            "example": 1
+          },
+          "create_time": {
+            "description": "The time when this response phase was created, as an epoch timestamp.",
+            "type": "number",
+            "example": 1676492834.50028
+          },
+          "update_time": {
+            "description": "The time when this response phase was updated, as an epoch timestamp.",
+            "type": "number",
+            "example": 1676492834.500499
+          },
+          "tasks": {
+            "description": "The list of tasks in the response template.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseTask"
+            }
+          }
+        }
+      },
+      "Note": {
+        "description": "Mission Control Note",
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "content",
+          "author"
+        ],
+        "properties": {
+          "id": {
+            "description": "The ID of the created note.",
+            "type": "string",
+            "example": "2f34ab66-929e-438d-b294-7ce5ea5415d4"
+          },
+          "title": {
+            "description": "The title of the note.",
+            "type": "string",
+            "example": "Create ticket - Task Note - 1"
+          },
+          "author": {
+            "description": "The user who created the note.",
+            "type": "object",
+            "properties": {
+              "username": {
+                "description": "The username of Splunk user who added the note.",
+                "type": "string",
+                "example": "splunk_user_name"
+              }
+            },
+            "example": {
+              "username": "admin"
+            }
+          },
+          "last_edited_by": {
+            "nullable": true,
+            "description": "The email address of the user who edited the note most recently.",
+            "type": "string",
+            "example": "bob@splunk.com"
+          },
+          "response_plan_info": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "response_plan": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response plan ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response plan.",
+                    "example": "Response Plan - 1"
+                  }
+                }
+              },
+              "response_phase": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response phase ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response phase.",
+                    "example": "Response Phase - 1"
+                  }
+                }
+              },
+              "response_task": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response task ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response task.",
+                    "example": "Response Task - 1"
+                  }
+                }
+              }
+            }
+          },
+          "source": {
+            "description": "The ID of the object that added this note.",
+            "type": "string",
+            "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+          },
+          "source_type": {
+            "description": "The type of object that added this note.",
+            "type": "string",
+            "enum": [
+              "Task",
+              "Incident"
+            ],
+            "example": "Task"
+          },
+          "incident_id": {
+            "description": "The ID of the incident that contains this note.",
+            "type": "string",
+            "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+          },
+          "content": {
+            "description": "The content of the note.",
+            "type": "string",
+            "example": "Note for task Create Ticket"
+          },
+          "files": {
+            "description": "The list of files added to the note.",
+            "type": "array",
+            "example": [
+              "576cddf8-f9b5-48db-b41b-cc1ea2ad4da3"
+            ],
+            "items": {
+              "type": "string",
+              "example": "576cddf8-f9b5-48db-b41b-cc1ea2ad4da3",
+              "description": "The file IDs of the files added to the note"
+            }
+          },
+          "create_time": {
+            "description": "The time when the note was created.",
+            "type": "number",
+            "example": 1676494561.553658
+          },
+          "update_time": {
+            "description": "The time when the note was updated.",
+            "type": "number",
+            "example": 1676494561.553894
+          }
+        }
+      },
+      "DeleteEventResponse": {
+        "description": "A list of ID of deleted events",
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "The ID of the deleted events.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "e3490048-4b7e-4e46-b01c-663f4ea725de"
+        }
+      },
+      "IncidentTask": {
+        "description": "Task Object in Response Plan",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the response task.",
+            "example": "4edb5c77-0ac3-4d49-842b-19b0eff4d8fd"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the task.",
+            "example": "Create ticket"
+          },
+          "tag": {
+            "type": "string",
+            "description": "The ID of the task that maps a response plan task to its original template.",
+            "example": "d81ff75d-d9fe-4618-9752-e2840e5aa147"
+          },
+          "order": {
+            "type": "integer",
+            "description": "The order of the task in respect to all tasks in the phase.",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the task.",
+            "example": "Create any necessary tickets or tracking documents describing the initial conditions of the suspicious email investigation. As additional information is collected or actions are taken in the following tasks and phases, update the ticket with links and relevant information to allow collaboration and tracking."
+          },
+          "owner": {
+            "type": "string",
+            "description": "The owner of the task.",
+            "example": "admin"
+          },
+          "is_note_required": {
+            "type": "boolean",
+            "description": "Determines whether a note is required to be created in order to complete or end the task.",
+            "example": false
+          },
+          "start_time": {
+            "type": "number",
+            "description": "The time when the task was started.",
+            "example": 1676493726.238174
+          },
+          "end_time": {
+            "type": "number",
+            "description": "The time when the task ended.",
+            "example": 1676493727.238301
+          },
+          "suggestions": {
+            "$ref": "#/components/schemas/TaskSuggestions"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileObject"
+            }
+          },
+          "response_plan_id": {
+            "type": "string",
+            "description": "The response Plan ID for this task.",
+            "example": "5c674507-50c2-4a94-b458-fdcb5eec333d"
+          },
+          "phase_id": {
+            "type": "string",
+            "description": "The response Phase ID for this task.",
+            "example": "e4317f74-2ca2-4812-9805-07c7e9aeaa40"
+          }
+        }
+      },
+      "TaskPayload": {
+        "description": "Task Object in Response Plan",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the task.",
+            "example": "Create ticket"
+          },
+          "order": {
+            "type": "integer",
+            "description": "The order of the task in respect to all tasks in the phase.",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the task.",
+            "example": "Create any necessary tickets or tracking documents describing the initial conditions of the suspicious email investigation. As additional information is collected or actions are taken in the following tasks and phases, update the ticket with links and relevant information to allow collaboration and tracking."
+          },
+          "owner": {
+            "type": "string",
+            "description": "The owner of the task.",
+            "example": "admin"
+          },
+          "is_note_required": {
+            "type": "boolean",
+            "description": "Determines whether a note is required to be created in order to complete or end the task.",
+            "example": false
+          }
+        },
+        "required": [
+          "name",
+          "order"
+        ]
+      },
+      "ResponseTask": {
+        "description": "Task Object in Response Plan",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the response task.",
+            "example": "4edb5c77-0ac3-4d49-842b-19b0eff4d8fd"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the task.",
+            "example": "Create ticket"
+          },
+          "tag": {
+            "type": "string",
+            "description": "The ID of the task that maps a response plan task to its original template.",
+            "example": "d81ff75d-d9fe-4618-9752-e2840e5aa147"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the task. Available options are Pending, Started, Ended, or Reopened.",
+            "enum": [
+              "Started",
+              "Ended",
+              "Reopened",
+              "Pending"
+            ],
+            "example": "Started"
+          },
+          "order": {
+            "type": "integer",
+            "description": "The order of the task in respect to all tasks in the phase.",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the task.",
+            "example": "Create any necessary tickets or tracking documents describing the initial conditions of the suspicious email investigation. As additional information is collected or actions are taken in the following tasks and phases, update the ticket with links and relevant information to allow collaboration and tracking."
+          },
+          "owner": {
+            "type": "string",
+            "description": "The owner of the task.",
+            "example": "admin"
+          },
+          "is_note_required": {
+            "type": "boolean",
+            "description": "Determines whether a note is required to be created in order to complete or end the task.",
+            "example": false
+          },
+          "start_time": {
+            "type": "number",
+            "description": "The time at when the task was started.",
+            "example": 1676493726.238174
+          },
+          "end_time": {
+            "type": "number",
+            "description": "The time at when the task was ended.",
+            "example": 1676493727.238301
+          },
+          "suggestions": {
+            "$ref": "#/components/schemas/TaskSuggestions"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Note"
+            }
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileObject"
+            }
+          },
+          "create_time": {
+            "type": "number",
+            "description": "The time when the task was created.",
+            "example": 1689110850.869705
+          },
+          "update_time": {
+            "type": "number",
+            "description": "The time when the task was last updated.",
+            "example": 1689110850.869705
+          },
+          "total_time_taken": {
+            "type": "number",
+            "description": "The time taken to complete a task in seconds.",
+            "example": 2
+          }
+        },
+        "required": [
+          "name",
+          "order",
+          "id"
+        ]
+      },
+      "UpdateTaskPayload": {
+        "description": "Task Object in Response Plan",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the task.",
+            "example": "Create ticket"
+          },
+          "order": {
+            "type": "integer",
+            "description": "The order of the task in respect to all tasks in the phase.",
+            "example": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the task.",
+            "example": "Create any necessary tickets or tracking documents describing the initial conditions of the suspicious email investigation. As additional information is collected or actions are taken in the following tasks and phases, update the ticket with links and relevant information to allow collaboration and tracking."
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the task. Available options are Started, Ended, or Reopened.",
+            "enum": [
+              "Started",
+              "Ended",
+              "Reopened",
+              "Pending"
+            ]
+          },
+          "owner": {
+            "type": "string",
+            "description": "The owner of the task.",
+            "example": "admin"
+          },
+          "is_note_required": {
+            "type": "boolean",
+            "description": "Determines whether a note is required to be created in order to complete or end the task.",
+            "example": false
+          }
+        }
+      },
+      "TaskSuggestions": {
+        "description": "Playbooks, actions or searches that were added to the task.",
+        "x-splunk-soar-connector-gen-parameter": {
+          "hidden": true
+        },
+        "type": "object",
+        "properties": {
+          "actions": {
+            "description": "The list of Splunk SOAR (SOAR) actions added to this response task.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            }
+          },
+          "playbooks": {
+            "description": "The list of SOAR playbooks added to this response task.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Playbooks"
+            }
+          },
+          "searches": {
+            "description": "The list of saved searches added to this response task.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Searches"
+            }
+          }
+        }
+      },
+      "IncidentResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "display_id",
+          "name",
+          "create_time",
+          "mc_create_time",
+          "update_time",
+          "incident_origin",
+          "source",
+          "description",
+          "incident_type",
+          "notable_id",
+          "disposition",
+          "disposition_name",
+          "status",
+          "status_name",
+          "assignee",
+          "urgency",
+          "sensitivity",
+          "sla",
+          "summary",
+          "es_notable_fields",
+          "attachments",
+          "notes",
+          "current_response_plan_phase",
+          "parent_incidents",
+          "child_incidents",
+          "response_plans"
+        ],
+        "properties": {
+          "id": {
+            "description": "The ID (GUID) of the incident that was retrieved.",
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "display_id": {
+            "description": "The short ID of the incident for display purposes.",
+            "type": "string",
+            "example": "MC-00001"
+          },
+          "name": {
+            "description": "The name of the incident.",
+            "type": "string",
+            "example": "Sample Threat Activity Detection"
+          },
+          "create_time": {
+            "description": "The time the incident was created. If the incident was imported from Splunk Enterprise Security, the time matches the notable create time.",
+            "type": "number",
+            "example": 1676497520
+          },
+          "mc_create_time": {
+            "description": "The time the incident was created or imported into Splunk Mission Control.",
+            "type": "number",
+            "example": 1676497763.861311
+          },
+          "update_time": {
+            "description": "The time the incident was last updated.",
+            "type": "number",
+            "example": 1676497800.160927
+          },
+          "incident_origin": {
+            "description": "Where the incident came from. For example, Splunk Enterprise Security, a risk-based alerting notable, or a Splunk Mission Control incident.",
+            "type": "string",
+            "example": "ES Notable Event"
+          },
+          "source": {
+            "description": "If the incident came from a Splunk Enterprise Security notable, the source is the correlation search that generated the notable.",
+            "type": "string",
+            "nullable": true,
+            "example": "Threat - Mission Control - Sample ES Notables - Rule"
+          },
+          "description": {
+            "description": "The description of the incident.",
+            "type": "string",
+            "example": "Sample Incident for Mission Control"
+          },
+          "incident_type": {
+            "description": "The incident type of the incident. Incident types are used to categorize related incidents by use case or source.",
+            "type": "string",
+            "example": "threat investigation"
+          },
+          "notable_id": {
+            "description": "The ID of the Splunk Enterprise Security notable this incident was created from.",
+            "type": "string",
+            "nullable": true,
+            "example": "A265ED94-AE9E-428C-91D2-64BB956EB7CB@@notable@@62eaebb8c0dd2574fc0b3503a9586cd9"
+          },
+          "disposition": {
+            "description": "The disposition ID of the incident.",
+            "type": "string",
+            "example": "disposition:1"
+          },
+          "disposition_name": {
+            "description": "The classification of the incident. For example, “True Positive - Suspicious Activity” or “False Positive - Incorrect Analytic Logic”.",
+            "type": "string",
+            "example": "True Positive - Suspicious Activity"
+          },
+          "response_plans": {
+            "description": "Array of Response Plans added to this incident.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponsePlan"
+            }
+          },
+          "status": {
+            "description": "The status ID of the incident.",
+            "type": "string",
+            "example": 1
+          },
+          "status_name": {
+            "description": "The status name of the incident.",
+            "type": "string",
+            "example": "New"
+          },
+          "assignee": {
+            "description": "The person or group assigned to the incident.",
+            "type": "string",
+            "example": "admin"
+          },
+          "urgency": {
+            "description": "The urgency of the incident. Valid choices are informational, low, medium, high, or critical.",
+            "type": "string",
+            "example": "informational",
+            "enum": [
+              "informational",
+              "low",
+              "medium",
+              "high",
+              "critical",
+              "unknown"
+            ]
+          },
+          "sensitivity": {
+            "description": "The sensitivity of the incident. Valid choices are White, Green, Amber, Red, or Unassigned.",
+            "type": "string",
+            "enum": [
+              "White",
+              "Green",
+              "Amber",
+              "Red",
+              "Unassigned"
+            ],
+            "example": "Red"
+          },
+          "sla": {
+            "description": "The service-level agreement (SLA) of the incident.",
+            "type": "object",
+            "properties": {
+              "sla_condition": {
+                "description": "The condition of the SLA. You can apply different SLA times to incidents that meet particular conditions. If no SLA condition is created, the default condition “default_sla” is used. To learn more about SLA conditions, see [Manage conditions for an incident SLA](https://docs.splunk.com/Documentation/MC/Current/Detect/IncidentSettings#Manage_conditions_for_an_incident_SLA) in *Investigate and Respond to Threats in Splunk Mission Control*.",
+                "type": "string",
+                "example": "default_sla"
+              },
+              "sla_total_time": {
+                "description": "The total time available to triage or investigate the incident within the SLA.",
+                "type": "integer",
+                "example": 24
+              },
+              "sla_units": {
+                "description": "Units of time for an SLA. Valid choices are m (minutes), h (hours), or d (days).",
+                "type": "string",
+                "enum": [
+                  "m",
+                  "h",
+                  "d"
+                ],
+                "example": "h"
+              },
+              "sla_id": {
+                "description": "The ID of the SLA.",
+                "type": "string",
+                "example": "598905ab-9c58-4b5f-9925-a049ee1b3d6a"
+              },
+              "sla": {
+                "description": "The time the SLA expires in UTC.",
+                "type": "number",
+                "example": 1676584163.861112
+              }
+            }
+          },
+          "es_notable_fields": {
+            "description": "The fields that are shown on the Incident review page selected from the associated Splunk Enterprise Security notable summary.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "src",
+              "dest"
+            ]
+          },
+          "attachments": {
+            "description": "Array of file IDs added directly to the incident.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "c7f677fc-8767-4b48-a29d-c28c3f979752"
+            ]
+          },
+          "notes": {
+            "description": "Array of note IDs added directly to the incident.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "c7f677fc-8767-4b48-a29d-c28c3f979752"
+            ]
+          },
+          "current_response_plan_phase": {
+            "description": "The data surrounding the current response plan phase.",
+            "type": "object",
+            "example": {
+              "phase_id": "e4317f74-2ca2-4812-9805-07c7e9aeaa40",
+              "response_plan_id": "5c674507-50c2-4a94-b458-fdcb5eec333d"
+            }
+          },
+          "parent_incidents": {
+            "description": "The parent incident IDs.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": []
+          },
+          "child_incidents": {
+            "description": "The child incidents IDs that have been added to this incident.",
+            "type": "object",
+            "properties": {
+              "incident_ids": {
+                "description": "The child incident IDs.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "11111111-1111-1111-1111-111111111111",
+                  "11111111-1111-1111-1111-111111111112"
+                ]
+              },
+              "field_inheritors": {
+                "description": "The child incident IDs that will inherit this parent incident's owner, status, urgency, sensitivity, and disposition values.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "11111111-1111-1111-1111-111111111111"
+                ]
+              }
+            }
+          },
+          "summary": {
+            "description": "The summary fields of the incident. Summary fields appear on the Overview tab.",
+            "type": "object",
+            "example": {
+              "src": "10.39.210.66",
+              "dest": "8.235.139.88"
+            }
+          },
+          "consolidated_summary": {
+            "description": "The consolidated summary fields of this parent incident and its child incidents. Summary fields appear on the Overview tab.",
+            "type": "object",
+            "example": {
+              "src": "10.39.210.66",
+              "dest": "8.235.139.88",
+              "app": "splunk"
+            }
+          },
+          "incident_summary_mapping": {
+            "description": "Mapping of which incident ID the consolidated summary values have originated from.",
+            "type": "object",
+            "example": {
+              "src_ip": {
+                "10.39.210.66": [
+                  "00000000-0000-0000-0000-000000000000",
+                  "11111111-1111-1111-1111-111111111111"
+                ]
+              },
+              "dest": {
+                "8.235.139.88": [
+                  "00000000-0000-0000-0000-000000000000",
+                  "11111111-1111-1111-1111-111111111112"
+                ]
+              },
+              "app": {
+                "splunk": [
+                  "11111111-1111-1111-1111-111111111111",
+                  "11111111-1111-1111-1111-111111111112"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "description": "Mission Control error response",
+        "type": "object",
+        "required": [
+          "requestId",
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "description": "The HTTP error code.",
+            "type": "string"
+          },
+          "requestId": {
+            "description": "The request ID of the API call.",
+            "type": "string"
+          },
+          "message": {
+            "description": "The error message.",
+            "type": "string"
+          }
+        },
+        "example": {
+          "code": "MC_0100",
+          "requestId": "74730fac-1d5c-4713-bef5-d30ed1c62188",
+          "message": "Oops...something went wrong."
+        }
+      },
+      "IncidentType": {
+        "description": "Incident Type Object",
+        "type": "object",
+        "properties": {
+          "incident_type": {
+            "description": "Name of the incident type",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description of the incident type",
+            "type": "string"
+          },
+          "create_time": {
+            "description": "When the incident type was created, in Epoch time",
+            "type": "number",
+            "readOnly": true
+          },
+          "update_time": {
+            "description": "When the incident type was last updated, in Epoch time.",
+            "type": "number",
+            "readOnly": true
+          },
+          "response_template_ids": {
+            "description": "IDs of response templates associated with the incident type",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "description": "response template identifier"
+            }
+          }
+        },
+        "required": [
+          "incident_type"
+        ]
+      },
+      "SoarNotificationType": {
+        "description": "Type of the notification",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "type of the notification",
+            "enum": [
+              "containercomment",
+              "approval",
+              "workbooktask",
+              "workflowtask"
+            ]
+          },
+          "data": {
+            "type": "object"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "SoarNotificationGroup": {
+        "description": "Group of the notification",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Group of the notification",
+            "enum": [
+              "manualtask",
+              "playbookprompt",
+              "parameterreview"
+            ]
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "SoarApproval": {
+        "description": "SOAR approval with the specific id for the user",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "action_run": {
+            "type": "integer"
+          },
+          "asset": {
+            "type": "integer"
+          },
+          "closed_time": {
+            "type": "string"
+          },
+          "display": {
+            "type": "boolean"
+          },
+          "due_time": {
+            "type": "string"
+          },
+          "escalated_approval": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "integer"
+          },
+          "owner_type": {
+            "type": "integer"
+          },
+          "parent": {
+            "type": "integer"
+          },
+          "playbook_run": {
+            "type": "integer"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "jitc": {
+            "type": "object"
+          },
+          "node_guid": {
+            "type": "string"
+          },
+          "responses": {
+            "type": "object"
+          }
+        }
+      },
+      "Pagination": {
+        "description": "The pagination info of a response",
+        "type": "object",
+        "properties": {
+          "total": {
+            "description": "Total Number of objects returned by the endpoint.",
+            "type": "integer"
+          },
+          "perPage": {
+            "description": "Number of objects to be displayed per page.",
+            "type": "integer"
+          },
+          "offset": {
+            "description": "Start Index for pagination.",
+            "type": "integer"
+          }
+        }
+      },
+      "Action": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the Splunk SOAR action.",
+            "type": "string",
+            "example": "876ab1de-d825-43c0-8b6c-e30c959d9044"
+          },
+          "name": {
+            "description": "The name of the  Splunk SOAR action.",
+            "type": "string",
+            "example": "geolocate ip - MaxMind"
+          },
+          "description": {
+            "description": "The description of the action.",
+            "type": "string",
+            "example": "This action validates the configuration of an asset."
+          },
+          "type": {
+            "description": "The type of the  Splunk SOAR action. For example, for a Splunk SOAR app, such as Maxmind, the type could be “investigate”, “generic”, “test”, “correct”, or “contain”.",
+            "type": "string",
+            "example": "geolocate ip"
+          },
+          "last_job_id": {
+            "description": "The last job ID of the Splunk SOAR action.",
+            "type": "number",
+            "example": 0
+          },
+          "action": {
+            "description": "The action ID of the Splunk SOAR action.",
+            "type": "string",
+            "example": 1394
+          },
+          "app_id": {
+            "description": "The app ID of the Splunk SOAR action.",
+            "type": "number",
+            "example": 169
+          },
+          "asset": {
+            "description": "The asset of the Splunk SOAR action.",
+            "type": "number",
+            "example": 1
+          },
+          "parameters": {
+            "description": "The parameters for the Splunk SOAR action. For example, {\"ip\":\"1.1.1.1\"}",
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "example": [
+              {
+                "ip": "1.1.1.1"
+              }
+            ]
+          },
+          "update_time": {
+            "description": "The time the Splunk SOAR action was updated.",
+            "type": "number",
+            "example": 1676495407.1743503
+          },
+          "create_time": {
+            "description": "The time the Splunk SOAR action. was created.",
+            "type": "number",
+            "example": 1676495280.719768
+          }
+        }
+      },
+      "Playbooks": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the Splunk SOAR playbook.",
+            "example": "f18a9b47-9e34-435b-8f72-c13b82609ee6",
+            "type": "string"
+          },
+          "last_job_id": {
+            "description": "The last job ID of the Splunk SOAR playbook.",
+            "type": "number",
+            "example": 0
+          },
+          "playbook_id": {
+            "description": "The playbook ID of the Splunk SOAR playbook.",
+            "type": "string",
+            "example": "community/suspicious_email_domain_enrichment"
+          },
+          "name": {
+            "description": "The name of the Splunk SOAR playbook.",
+            "type": "string",
+            "example": "suspicious_email_domain_enrichment"
+          },
+          "description": {
+            "description": "The description of the Splunk SOAR playbook.",
+            "type": "string",
+            "example": "This playbook geolocates an address."
+          },
+          "scope": {
+            "description": "The scope of the Splunk SOAR playbook. For example, “all\" or “new\".",
+            "type": "string",
+            "example": "all"
+          },
+          "update_time": {
+            "description": "The update time of the SOAR playbook.",
+            "type": "number",
+            "example": 1676495407.17426
+          },
+          "create_time": {
+            "description": "The create time of the SOAR playbook.",
+            "type": "number",
+            "example": 1676495280.719677
+          }
+        }
+      },
+      "Searches": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the search.",
+            "example": "f03af0f8-2e9d-463f-a50b-790dbdd44d5d",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the saved search.",
+            "type": "string",
+            "example": "Access - Access Over Time By App"
+          },
+          "spl": {
+            "description": "The SPL query for the saved search.",
+            "type": "string",
+            "example": "%7C%20%60tstats%60%20count%20from%20datamodel%3DAuthentication.Authentication%20by%20_time%2CAuthentication.app%20span%3D10m%20%7C%20timechart%20minspan%3D10m%20useother%3D%60useother%60%20count%20by%20Authentication.app"
+          },
+          "description": {
+            "description": "The description of the saved search.",
+            "type": "string",
+            "example": "Use Splunk searches to list the stats for app accessing"
+          },
+          "update_time": {
+            "description": "The update time of the saved search.",
+            "type": "number",
+            "example": 1676496024.7015831
+          },
+          "create_time": {
+            "description": "The create time of the saved search.",
+            "type": "number",
+            "example": 1676495280.719843
+          }
+        }
+      },
+      "CreateNotePayload": {
+        "description": "The Mission Control create note request payload",
+        "type": "object",
+        "required": [
+          "title",
+          "content"
+        ],
+        "properties": {
+          "title": {
+            "description": "The title of the response plan note.",
+            "type": "string",
+            "example": "Create ticket - Task Note - 1"
+          },
+          "content": {
+            "description": "The data stored within the note.",
+            "type": "string",
+            "example": "Note for task Create Ticket"
+          },
+          "files": {
+            "description": "An array of file IDs to add to a note.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "22a2e62e186f4dc4b33edde666534b4622a2e62e186f4dc4b33edde666534b46"
+            ]
+          }
+        }
+      },
+      "FileObject": {
+        "description": "Information on files stored in Mission Control",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique ID for this file.",
+            "example": "c80a092f-9dca-484b-8733-9c3162ee4ab8"
+          },
+          "file_name": {
+            "type": "string",
+            "description": "The name of the file.",
+            "example": "splunk-logo-dark.svg"
+          },
+          "incident_type": {
+            "type": "string",
+            "description": "The incident type of the incident. Incident types are used to categorize related incidents by use case or source.",
+            "example": "threat investigation"
+          },
+          "incident_id": {
+            "type": "string",
+            "description": "The incident ID of the object that attached this file.",
+            "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+          },
+          "response_plan_info": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "response_plan": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response plan ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response plan.",
+                    "example": "Response Plan - 1"
+                  }
+                }
+              },
+              "response_phase": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response phase ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response phase.",
+                    "example": "Response Phase - 1"
+                  }
+                }
+              },
+              "response_task": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The response task ID if this was a file uploaded from a response task.",
+                    "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the response task.",
+                    "example": "Response Task - 1"
+                  }
+                }
+              }
+            }
+          },
+          "reference_list": {
+            "description": "A list of object IDs (response note, task, etc.) that uploaded this file.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "1982c0a4-b710-4827-856d-0a9c4f77e70b"
+            ]
+          },
+          "size": {
+            "type": "number",
+            "description": "The size of the file in bytes.",
+            "example": 5829
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "Task",
+              "Incident",
+              "Note"
+            ],
+            "description": "The type of object that added this file."
+          },
+          "source": {
+            "type": "string",
+            "nullable": true,
+            "description": "The ID of the object (response note, task, etc.) that added this file.",
+            "example": "c80a092f-9dca-484b-8733-9c3162ee4ab9"
+          },
+          "source_user": {
+            "type": "string",
+            "description": "The username of the user that added this file.",
+            "example": "admin"
+          },
+          "created_on": {
+            "type": "number",
+            "description": "The time when this file was initially added.",
+            "example": 1676494088.786956
+          },
+          "file_key": {
+            "type": "string",
+            "description": "The sha256 hash of the contents of this file.",
+            "example": "22a2e62e186f4dc4b33edde666534b4622a2e62e186f4dc4b33edde666534b46"
+          },
+          "_user": {
+            "type": "string",
+            "description": "User field generated by Splunk and added to the KV Store.",
+            "example": ""
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "description": "The Bearer auth token",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
