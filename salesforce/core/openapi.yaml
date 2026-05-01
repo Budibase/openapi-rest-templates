@@ -1,0 +1,733 @@
+openapi: 3.0.3
+info:
+  title: Salesforce Core REST API
+  version: 1.0.0
+  description: Query, describe, read, write, and compose Salesforce sObject data.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://{instanceUrl}
+    variables:
+      instanceUrl:
+        default: your-domain.my.salesforce.com
+security:
+  - salesforceBearerAuth: []
+tags:
+  - name: API Versions
+    description: Discover supported Salesforce REST API versions and resources.
+  - name: Limits
+    description: Inspect organization API limits.
+  - name: sObjects
+    description: Discover Salesforce object metadata.
+  - name: Records
+    description: Create, retrieve, update, and delete Salesforce records.
+  - name: Query
+    description: Execute SOQL queries.
+  - name: Composite
+    description: Execute multiple REST API requests in a single call.
+paths:
+  /services/data:
+    get:
+      tags:
+        - API Versions
+      summary: List API versions
+      description: Returns the list of supported Salesforce REST API versions.
+      operationId: listApiVersions
+      responses:
+        "200":
+          description: Supported API versions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiVersion"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}:
+    get:
+      tags:
+        - API Versions
+      summary: Get resources by version
+      description: Returns available REST API resources for the specified API version.
+      operationId: getResourcesByVersion
+      parameters:
+        - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: Available resources for the API version.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcesByVersion"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/limits:
+    get:
+      tags:
+        - Limits
+      summary: Get org limits
+      description: Returns current limits for the Salesforce org.
+      operationId: getOrgLimits
+      parameters:
+        - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: Org limits keyed by limit name.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LimitsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/sobjects:
+    get:
+      tags:
+        - sObjects
+      summary: List sObjects
+      description: Returns metadata for the objects available to the authenticated user.
+      operationId: listSObjects
+      parameters:
+        - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: Available sObjects.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/sobjects/{sObjectName}/describe:
+    get:
+      tags:
+        - sObjects
+      summary: Describe sObject
+      description: Returns fields, child relationships, record type information, and other metadata for an sObject.
+      operationId: describeSObject
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+      responses:
+        "200":
+          description: sObject describe metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectDescribe"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/sobjects/{sObjectName}:
+    post:
+      tags:
+        - Records
+      summary: Create record
+      description: Creates a record for the specified sObject.
+      operationId: createRecord
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalesforceRecordInput"
+            example:
+              Name: Acme
+      responses:
+        "201":
+          description: Created record identifier and result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordMutationResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/sobjects/{sObjectName}/{recordId}:
+    get:
+      tags:
+        - Records
+      summary: Retrieve record
+      description: Retrieves a Salesforce record by sObject name and record ID.
+      operationId: getRecord
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+        - $ref: "#/components/parameters/recordId"
+        - name: fields
+          in: query
+          description: Comma-separated list of fields to return.
+          required: false
+          schema:
+            type: string
+          example: Id,Name,CreatedDate
+      responses:
+        "200":
+          description: Salesforce record.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SalesforceRecord"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Records
+      summary: Update record
+      description: Updates fields on a Salesforce record.
+      operationId: updateRecord
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+        - $ref: "#/components/parameters/recordId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalesforceRecordInput"
+            example:
+              Name: Acme Updated
+      responses:
+        "204":
+          description: Record updated.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Records
+      summary: Delete record
+      description: Deletes a Salesforce record.
+      operationId: deleteRecord
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+        - $ref: "#/components/parameters/recordId"
+      responses:
+        "204":
+          description: Record deleted.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/query:
+    get:
+      tags:
+        - Query
+      summary: SOQL query
+      description: Executes a SOQL query and returns matching records.
+      operationId: query
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/soqlQuery"
+      responses:
+        "200":
+          description: Query results.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/queryAll:
+    get:
+      tags:
+        - Query
+      summary: SOQL queryAll
+      description: Executes a SOQL query including deleted and archived records where available.
+      operationId: queryAll
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/soqlQuery"
+      responses:
+        "200":
+          description: Query results including deleted or archived records where available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/composite:
+    post:
+      tags:
+        - Composite
+      summary: Composite request
+      description: Executes multiple REST API subrequests in a single call and allows later subrequests to reference earlier results.
+      operationId: compositeRequest
+      parameters:
+        - $ref: "#/components/parameters/version"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompositeRequest"
+      responses:
+        "200":
+          description: Composite subrequest responses.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompositeResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/composite/batch:
+    post:
+      tags:
+        - Composite
+      summary: Composite batch
+      description: Executes up to 25 independent subrequests in a single batch request.
+      operationId: compositeBatch
+      parameters:
+        - $ref: "#/components/parameters/version"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompositeBatchRequest"
+      responses:
+        "200":
+          description: Batch subrequest responses.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompositeBatchResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/composite/tree/{sObjectName}:
+    post:
+      tags:
+        - Composite
+      summary: Composite tree
+      description: Creates one or more related records for a root sObject type in a single request.
+      operationId: compositeTree
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/sObjectName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompositeTreeRequest"
+      responses:
+        "200":
+          description: Tree create results.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompositeTreeResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    salesforceBearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    version:
+      name: version
+      in: path
+      required: true
+      description: Salesforce API version without the leading `v`.
+      schema:
+        type: string
+        example: "60.0"
+    sObjectName:
+      name: sObjectName
+      in: path
+      required: true
+      description: API name of the Salesforce object.
+      schema:
+        type: string
+        example: Account
+    recordId:
+      name: recordId
+      in: path
+      required: true
+      description: Salesforce record ID.
+      schema:
+        type: string
+        example: 0015g00000abcDeAAI
+    soqlQuery:
+      name: q
+      in: query
+      required: true
+      description: SOQL query string.
+      schema:
+        type: string
+      example: SELECT Id, Name FROM Account LIMIT 10
+  responses:
+    BadRequest:
+      description: Request was not valid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+    Unauthorized:
+      description: Authentication failed or the bearer token is missing.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+    NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+  schemas:
+    ApiVersion:
+      type: object
+      additionalProperties: true
+      properties:
+        label:
+          type: string
+          example: Spring '24
+        url:
+          type: string
+          example: /services/data/v60.0
+        version:
+          type: string
+          example: "60.0"
+    ResourcesByVersion:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        sobjects: /services/data/v60.0/sobjects
+        query: /services/data/v60.0/query
+        composite: /services/data/v60.0/composite
+    LimitValue:
+      type: object
+      additionalProperties: true
+      properties:
+        Max:
+          type: integer
+          format: int64
+        Remaining:
+          type: integer
+          format: int64
+    LimitsResponse:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/LimitValue"
+    SObjectsResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        encoding:
+          type: string
+        maxBatchSize:
+          type: integer
+        sobjects:
+          type: array
+          items:
+            $ref: "#/components/schemas/SObjectSummary"
+    SObjectSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          example: Account
+        label:
+          type: string
+          example: Account
+        custom:
+          type: boolean
+        keyPrefix:
+          type: string
+        urls:
+          type: object
+          additionalProperties:
+            type: string
+    SObjectDescribe:
+      type: object
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          example: Account
+        label:
+          type: string
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/SObjectField"
+        childRelationships:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        recordTypeInfos:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    SObjectField:
+      type: object
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          example: Name
+        label:
+          type: string
+        type:
+          type: string
+        nillable:
+          type: boolean
+        createable:
+          type: boolean
+        updateable:
+          type: boolean
+    SalesforceRecordInput:
+      type: object
+      additionalProperties: true
+      description: Field values for a Salesforce record. Custom and standard fields vary by org and sObject.
+    SalesforceRecord:
+      type: object
+      additionalProperties: true
+      properties:
+        attributes:
+          $ref: "#/components/schemas/RecordAttributes"
+    RecordAttributes:
+      type: object
+      additionalProperties: true
+      properties:
+        type:
+          type: string
+          example: Account
+        url:
+          type: string
+          example: /services/data/v60.0/sobjects/Account/0015g00000abcDeAAI
+    RecordMutationResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+          example: 0015g00000abcDeAAI
+        success:
+          type: boolean
+          example: true
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesforceError"
+    QueryResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        totalSize:
+          type: integer
+          example: 1
+        done:
+          type: boolean
+          example: true
+        nextRecordsUrl:
+          type: string
+          example: /services/data/v60.0/query/01gD0000002HU6KIAW-2000
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesforceRecord"
+    CompositeRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        allOrNone:
+          type: boolean
+          description: Roll back all changes when any subrequest fails.
+        collateSubrequests:
+          type: boolean
+          description: Allows Salesforce to collate unrelated subrequests when possible.
+        compositeRequest:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompositeSubrequest"
+      required:
+        - compositeRequest
+    CompositeSubrequest:
+      type: object
+      additionalProperties: false
+      properties:
+        method:
+          type: string
+          enum:
+            - GET
+            - POST
+            - PATCH
+            - PUT
+            - DELETE
+        url:
+          type: string
+          example: /services/data/v60.0/sobjects/Account
+        referenceId:
+          type: string
+          example: refAccount
+        body:
+          type: object
+          additionalProperties: true
+      required:
+        - method
+        - url
+        - referenceId
+    CompositeResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        compositeResponse:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompositeSubresponse"
+    CompositeSubresponse:
+      type: object
+      additionalProperties: true
+      properties:
+        body:
+          type: object
+          additionalProperties: true
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        httpStatusCode:
+          type: integer
+          example: 201
+        referenceId:
+          type: string
+          example: refAccount
+    CompositeBatchRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        haltOnError:
+          type: boolean
+        batchRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompositeBatchSubrequest"
+      required:
+        - batchRequests
+    CompositeBatchSubrequest:
+      type: object
+      additionalProperties: false
+      properties:
+        method:
+          type: string
+          enum:
+            - GET
+            - POST
+            - PATCH
+            - PUT
+            - DELETE
+        url:
+          type: string
+          example: v60.0/sobjects/Account
+        richInput:
+          type: object
+          additionalProperties: true
+      required:
+        - method
+        - url
+    CompositeBatchResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        hasErrors:
+          type: boolean
+        results:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    CompositeTreeRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompositeTreeRecord"
+      required:
+        - records
+    CompositeTreeRecord:
+      type: object
+      additionalProperties: true
+      properties:
+        attributes:
+          type: object
+          additionalProperties: true
+          properties:
+            type:
+              type: string
+              example: Account
+            referenceId:
+              type: string
+              example: ref1
+    CompositeTreeResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        hasErrors:
+          type: boolean
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompositeTreeResult"
+    CompositeTreeResult:
+      type: object
+      additionalProperties: true
+      properties:
+        referenceId:
+          type: string
+        id:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesforceError"
+    SalesforceErrors:
+      type: array
+      items:
+        $ref: "#/components/schemas/SalesforceError"
+    SalesforceError:
+      type: object
+      additionalProperties: true
+      properties:
+        message:
+          type: string
+        errorCode:
+          type: string
+        fields:
+          type: array
+          items:
+            type: string

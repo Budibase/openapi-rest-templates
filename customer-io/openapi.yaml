@@ -1,0 +1,2882 @@
+openapi: 3.0.0
+info:
+  title: Customer.io
+  version: 1.0.0
+  description: Customer engagement and messaging platform.
+  license:
+    name: MIT
+    url: "https://opensource.org/licenses/MIT"
+servers:
+  - url: "https://api.customer.io"
+security:
+  - customerIoAppApiKey: []
+tags:
+  - name: Activities
+    description: Activities operations.
+  - name: Broadcasts
+    description: Broadcasts operations.
+  - name: Campaigns
+    description: Campaigns operations.
+  - name: Collections
+    description: Collections operations.
+  - name: Customers
+    description: Customers operations.
+  - name: ESPSuppression
+    description: ESPSuppression operations.
+  - name: Exports
+    description: Exports operations.
+  - name: Imports
+    description: Imports operations.
+  - name: Info
+    description: Info operations.
+  - name: Messages
+    description: Messages operations.
+  - name: Newsletters
+    description: Newsletters operations.
+  - name: Objects
+    description: Objects operations.
+  - name: ReportingWebhooks
+    description: ReportingWebhooks operations.
+  - name: Segments
+    description: Segments operations.
+  - name: SendMessages
+    description: SendMessages operations.
+  - name: SenderIdentities
+    description: SenderIdentities operations.
+  - name: Snippets
+    description: Snippets operations.
+  - name: SubscriptionCenter
+    description: SubscriptionCenter operations.
+  - name: Transactional
+    description: Transactional operations.
+  - name: Workspaces
+    description: Workspaces operations.
+paths:
+  /v1/activities:
+    get:
+      tags:
+        - Activities
+      summary: List activities
+      operationId: Activities_list
+      description: "This endpoint returns a list of “activities” for people, similar to your workspace’s Activity Logs. This endpoint is guaranteed to return activity history within the past 30 days. It might return data older than 30 days in some circumstances, but activites older than 30 days are not guaranteed."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcast/{broadcast_id}/actions/{action_id}/metrics":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast action metrics
+      operationId: Broadcasts_getActionMetrics
+      description: "Returns a list of metrics for an individual action both in total and in steps (days, weeks, etc) over a period of time. Stepped series metrics return from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/broadcasts:
+    get:
+      tags:
+        - Broadcasts
+      summary: List broadcasts
+      operationId: Broadcasts_list
+      description: Returns a list of your broadcasts and associated metadata.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get a broadcast
+      operationId: Broadcasts_getMetadata
+      description: Returns metadata for an individual broadcast.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/actions":
+    get:
+      tags:
+        - Broadcasts
+      summary: List broadcast actions
+      operationId: Broadcasts_getActions
+      description: Returns the actions that occur as a part of a broadcast.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/actions/{action_id}":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get a broadcast action
+      operationId: Broadcasts_getActionDetails
+      description: Returns information about a specific action within a broadcast.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Broadcasts
+      summary: Update a broadcast action
+      operationId: Broadcasts_updateActionContents
+      description: "Update the contents of a broadcast action, including the body of messages or HTTP requests."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/actions/{action_id}/language/{language}":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get a translation of a broadcast message
+      operationId: Broadcasts_getTranslationMessage
+      description: Returns information about a translation of message in a broadcast. The message is identified by the action_id.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Broadcasts
+      summary: Update a translation of a broadcast message
+      operationId: Broadcasts_updateTranslation
+      description: "Update a translation of a specific broadcast action, including the body of messages or HTTP requests."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/actions/{action_id}/metrics/links":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast action link metrics
+      operationId: Broadcasts_getActionLinkMetrics
+      description: "Returns link click metrics for an individual broadcast action. Unless you specify otherwise, the response contains data for the maximum period by days (45 days).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/messages":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get messages for a broadcast
+      operationId: Broadcasts_getMessages
+      description: "Returns information about the deliveries (instances of messages sent to individual people) sent from an API-triggered broadcast. Provide query parameters to refine the metrics you want to return.\n\nUse the start_ts and end_ts to find messages within a time range. If your request doesn’t include start_ts and end_ts parameters, we’ll return results for the 1 month period after the first trigger. If your start_ts and end_ts range is more than 12 months, we’ll return 12 months of data from the most recent timestamp in your request."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/metrics":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast metrics
+      operationId: Broadcasts_getMetrics
+      description: "Returns a list of metrics for an individual broadcast in steps (days, weeks, etc). We return metrics from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/metrics/links":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast link metrics
+      operationId: Broadcasts_getLinkMetrics
+      description: "Returns metrics for link clicks within a broadcast, both in total and in series periods (days, weeks, etc). series metrics are ordered oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/broadcasts/{broadcast_id}/triggers":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast triggers
+      operationId: Broadcasts_getTriggers
+      description: Returns a list of the triggers for a broadcast.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{broadcast_id}/triggers/{trigger_id}":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get the status of a broadcast
+      operationId: Broadcasts_getStatus
+      description: After triggering a broadcast you can retrieve the status of that broadcast using a GET of the trigger_id. You can retrieve the trigger_id from Get broadcast triggers.
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: trigger_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{broadcast_id}/triggers/{trigger_id}/errors":
+    get:
+      tags:
+        - Broadcasts
+      summary: Get broadcast error descriptions
+      operationId: Broadcasts_getBroadcastErrors
+      description: "If your broadcast produced validation errors, this endpoint can help you better understand what went wrong. Broadcast errors are generally issues in your broadcast audience and associated."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: trigger_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/campaigns:
+    get:
+      tags:
+        - Campaigns
+      summary: List campaigns
+      operationId: Campaigns_getList
+      description: Returns a list of your campaigns and associated metadata.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}":
+    get:
+      tags:
+        - Campaigns
+      summary: Get a campaign
+      operationId: Campaigns_getMetadata
+      description: Returns metadata for an individual campaign.
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/actions":
+    get:
+      tags:
+        - Campaigns
+      summary: List campaign actions
+      operationId: Campaigns_listActions
+      description: "Returns the operations in a campaign workflow. Each object in the response represents an action or ‘tile’ in the campaign builder.\n\nThis endpoint returns up to 10 actions at a time. If there is another page of results, the response will include a next string. Pass this string as the start parameter to get the next page of results."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/actions/{action_id}":
+    get:
+      tags:
+        - Campaigns
+      summary: Get a campaign action
+      operationId: Campaigns_getActionInfo
+      description: Returns information about a specific action in a campaign.
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Campaigns
+      summary: Update a campaign action
+      operationId: Campaigns_updateActionContents
+      description: "Update the contents of a campaign action, including the body of messages and HTTP requests."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/actions/{action_id}/language/{language}":
+    get:
+      tags:
+        - Campaigns
+      summary: Get a translation of a campaign message
+      operationId: Campaigns_getMessageTranslation
+      description: Returns a translated version of a message in a campaign. The message is identified by the action_id.
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Campaigns
+      summary: Update a translation of a campaign message
+      operationId: Campaigns_updateTranslation
+      description: "Update the contents of a language variant of a campaign action, including the body of the messages and HTTP requests."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/actions/{action_id}/metrics":
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign action metrics
+      operationId: Campaigns_getActionMetrics
+      description: "Returns a list of metrics for an individual action both in total and in steps (days, weeks, etc) over a period of time. Stepped series metrics return from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/actions/{action_id}/metrics/links":
+    get:
+      tags:
+        - Campaigns
+      summary: Get link metrics for an action
+      operationId: Campaigns_getLinkMetricsForAction
+      description: "Returns link click metrics for an individual action. Unless you specify otherwise, the response contains data for the maximum period by days (45 days).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: action_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/journey_metrics":
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign journey metrics
+      operationId: Campaigns_getJourneyMetrics
+      description: "Returns a list of Journey Metrics for your campaign. These metrics show how many people triggered your campaign, were messaged, etc for the time period and “resolution” you set. You must provide the start, end, and resolution parameters or your request will return 400.\n\nMetrics in the response are arrays, and each index in the array corresponds to the resolution in your request. If you request metrics in days, the first result in each metric array is the first day of results and each successive increment represents another day.\n\nEach increment represents the number of journeys that started within a time period and eventually achieved a particular metric. For example, array index 0 for the converted metric represents the number of journeys that started on the first day/month of results that achieved a conversion."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/messages":
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign message metadata
+      operationId: Campaigns_getMessageMetadata
+      description: "Returns information about the deliveries (instances of messages sent to individual people) sent from a campaign. Provide query parameters to refine the metrics you want to return.\n\nUse the start_ts and end_ts to find messages within a time range. If your request doesn’t include start_ts and end_ts parameters, we’ll return the most recent 6 months of messages. If your start_ts and end_ts range is more than 12 months, we’ll return 12 months of data from the most recent timestamp in your request."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/metrics":
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign metrics
+      operationId: Campaigns_getMetrics
+      description: "Returns a list of metrics for an individual campaign in steps (days, weeks, etc). We return metrics from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{campaign_id}/metrics/links":
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign link metrics
+      operationId: Campaigns_getLinkMetrics
+      description: "Returns metrics for link clicks within a campaign, both in total and in series periods (days, weeks, etc). series metrics are ordered oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/collections:
+    get:
+      tags:
+        - Collections
+      summary: List your collections
+      operationId: Collections_list
+      description: "Returns a list of all of your collections, including the name and schema for each collection."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    post:
+      tags:
+        - Collections
+      summary: Create a collection
+      operationId: Collections_createNew
+      description: "Create a new collection and provide the data that you’ll access from the collection or the url that you’ll download CSV or JSON data from.\n\nNote: A collection cannot be more than 10 MB in size. No individual row in the collection can be more than 10 KB."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/collections/{collection_id}":
+    delete:
+      tags:
+        - Collections
+      summary: Delete a collection
+      operationId: Collections_removeCollection
+      description: "Remove a collection and associated contents. Before you delete a collection, make sure that you aren’t referencing it in active campaign messages or broadcasts; references to a deleted collection will appear empty and may prevent your messages from making sense to your audience."
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    get:
+      tags:
+        - Collections
+      summary: Lookup a collection
+      operationId: Collections_getDetails
+      description: "Retrieves details about a collection, including the schema and name. This request does not include the content of the collection (the values associated with keys in the schema)."
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Collections
+      summary: Update a collection
+      operationId: Collections_updateCollection
+      description: "Update the name or replace the contents of a collection. Updating the data or url for your collection fully replaces the contents of the collection.\n\nNote:\n\n If you reference your collection by name in active campaign messages, changing the name of the collection will cause references to the previous name to return an empty data set.\n A collection cannot be more than 10 MB in size. No individual row in the collection can be more than 10 KB."
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/collections/{collection_id}/content":
+    get:
+      tags:
+        - Collections
+      summary: Lookup collection contents
+      operationId: Collections_getContents
+      description: Retrieve the contents of a collection (the data from when you created or updated a collection). Each row in the collection is represented as a JSON blob in the response.
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Collections
+      summary: Update the contents of a collection
+      operationId: Collections_updateContents
+      description: "Replace the contents of a collection (the data from when you created or updated a collection). The request is a free-form object containing the keys you want to reference from the collection and the corresponding values. This request replaces the current contents of the collection entirely.\n\nIf you don’t want to update the contents directly—you want to change the name or data url for your collection, use the update a collection endpoint.\n\nNote: A collection cannot be more than 10 MB in size. No individual row in the collection can be more than 10 KB."
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/customers:
+    get:
+      tags:
+        - Customers
+      summary: Get customers by email
+      operationId: Customers_findByEmail
+      description: Return a list of people in your workspace matching an email address.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    post:
+      tags:
+        - Customers
+      summary: Search for customers
+      operationId: Customers_searchFilter
+      description: "Provide a filter to search for people in your workspace. Your filter can filter people by segment (using the Segment ID) and attribute values; when you filter by attributes, you can use eq (matching an attribute value) or exists (matching when a person has the attribute). Use the and array, or array, and not object to create a complex filter. The not selector is an object that takes a single filter.\n\nReturns arrays of identifiers and ids. In general, you should rely on the newer identifiers array, which contains more complete information about each person captured by the filter in your request, than the ids array, which only contains id values.\n\nYou can return up to 1000 people per request. If you want to return a larger set of people in a single request, you may want to use the /exports API instead."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/customers/attributes:
+    post:
+      tags:
+        - Customers
+      summary: "List customers, attributes, and devices"
+      operationId: Customers_listAttributesDevices
+      description: "Return attributes and devices for up to 100 customers by ID. If an ID in the request does not exist, the response omits it."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/activities":
+    get:
+      tags:
+        - Customers
+      summary: "Lookup a customer's activities"
+      operationId: Customers_getActivities
+      description: "Return a list of activities performed by, or for, a customer. Activities are things like attribute changes and message sends."
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/attributes":
+    get:
+      tags:
+        - Customers
+      summary: "Lookup a customer's attributes"
+      operationId: Customers_getAttributes
+      description: Return a list of attributes for a customer profile. You can use attributes to fashion segments or as liquid merge fields in your messages.
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/messages":
+    get:
+      tags:
+        - Customers
+      summary: Lookup messages sent to a customer
+      operationId: Customers_getMessages
+      description: "Returns information about the deliveries sent to a person. Provide query parameters to refine the data you want to return.\n\nUse the start_ts and end_ts to find messages within a time range. If your request doesn’t include start_ts and end_ts parameters, we’ll return the most recent 6 months of messages. If your start_ts and end_ts range is more than 6 months, we’ll return 6 months of data from the most recent timestamp in your request."
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/relationships":
+    get:
+      tags:
+        - Customers
+      summary: "Lookup a customer's relationships"
+      operationId: Customers_lookupRelationships
+      description: "Return a list of objects that a person is related to.\n\nYou can use the start parameter with the next property in responses to return pages of results. However, it’s possible that you’ll see duplicate entries across pages. If you want to export objects or relationships, you may want to use the export feature in our UI to return complete results."
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/segments":
+    get:
+      tags:
+        - Customers
+      summary: "Lookup a customer's segments"
+      operationId: Customers_lookupSegments
+      description: Returns a list of segments that a customer profile belongs to.
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/customers/{customer_id}/subscription_preferences":
+    get:
+      tags:
+        - Customers
+      summary: "Lookup a customer's subscription preferences"
+      operationId: Customers_getSubscriptionPreferences
+      description: "Returns a list of subscription preferences for a person, including the custom header of the subscription preferences page, topic names, and topic descriptions. Returns translated data when you send a language in the query."
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/esp/search_suppression/{email_address}":
+    get:
+      tags:
+        - ESPSuppression
+      summary: "Look up an ESP-suppressed address"
+      operationId: EspSuppression_lookupAddress
+      description: "Look up an email address to learn if, and why, it was suppressed by the email service provider (ESP)."
+      parameters:
+        - name: email_address
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/esp/suppression/{suppression_type}":
+    get:
+      tags:
+        - ESPSuppression
+      summary: "Get ESP-suppressed emails by type"
+      operationId: EspSuppression_getEmailsByType
+      description: "Find addresses suppressed by the Email Service Provider (ESP) for a particular reason—bounces, blocks, spam reports, or invalid email addresses.\n\nYou can get up to 1000 addresses per request. Use the offset parameter to get addresses beyond the first 1000."
+      parameters:
+        - name: suppression_type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/esp/suppression/{suppression_type}/{email_address}":
+    delete:
+      tags:
+        - ESPSuppression
+      summary: "Un-suppress an ESP-suppressed address"
+      operationId: EspSuppression_unSuppressAddress
+      description: Remove an address from the ESP’s suppression list.
+      parameters:
+        - name: suppression_type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: email_address
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    post:
+      tags:
+        - ESPSuppression
+      summary: Suppress an email at the ESP
+      operationId: EspSuppression_emailAddress
+      description: "Suppress an email address at the email service provider (ESP). Addresses suppressed this way are only suppressed through the ESP; these adresses are not suppressed in Customer.io, so the person can remain in your workspace (though emails to the address would be blocked at the ESP)."
+      parameters:
+        - name: suppression_type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: email_address
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/exports:
+    get:
+      tags:
+        - Exports
+      summary: List exports
+      operationId: Exports_listMetrics
+      description: "Return a list of your exports. Exports are point-in-time people or campaign metrics."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/exports/customers:
+    post:
+      tags:
+        - Exports
+      summary: Export customer data
+      operationId: Exports_createCustomerExport
+      description: "Provide filters and attributes describing the customers you want to export. This endpoint returns export metadata; use the /exports/{export_id}/endpoint to download your export."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/exports/deliveries:
+    post:
+      tags:
+        - Exports
+      summary: Export information about deliveries
+      operationId: Exports_exportDeliveriesInfo
+      description: "Provide filters for the newsletter, campaign, or action you want to return delivery information from. This endpoint starts an export, but you cannot download your export from this endpoint. Use the /exports/{export_id} endpoint to download your export.\n\nUse the start and end to find messages within a time range. If your request doesn’t include start and end parameters, we’ll return the most recent 6 months of messages. If your start and end range is more than 12 months, we’ll return 12 months of data from the most recent timestamp in your request."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/exports/{export_id}":
+    get:
+      tags:
+        - Exports
+      summary: Get an export
+      operationId: Exports_getExportInfo
+      description: Return information about a specific export.
+      parameters:
+        - name: export_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/exports/{export_id}/download":
+    get:
+      tags:
+        - Exports
+      summary: Download an export
+      operationId: Exports_downloadExportSignedLink
+      description: This endpoint returns a signed link to download an export. The link expires after 15 minutes.
+      parameters:
+        - name: export_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/imports:
+    post:
+      tags:
+        - Imports
+      summary: Import items in bulk
+      operationId: Imports_bulkUploadCsv
+      description: "This endpoint lets you upload a CSV file containing people, events, objects, or relationships. It provides a handy way of adding and updating them in bulk. Uploading people, objects, or relationships is like performing an identify call for each row in your CSV; uploading events is like performing a track call.\n\nYou’ll need to provide us the public URL of your CSV as a part of this operation. We recommend that you host your CSVs from short-lived URLs. Ideally, your URLs will expire 2 hours after you initiate an import so that your customers’ information doesn’t remain publicly available after you’ve uploaded it to us.\n\nCheck out the CSV requirements based on what you’re importing: people, events, and objects or relationships."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/imports/{import_id}":
+    get:
+      tags:
+        - Imports
+      summary: Retrieve a bulk import
+      operationId: Imports_getBulkImport
+      description: "This endpoint returns information about an “import”—a CSV file containing a group of people or events you uploaded to using v1/imports endpoint. You can use this endpoint to check to status of imports, or find out how many rows you successfully imported from a CSV file."
+      parameters:
+        - name: import_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/info/ip_addresses:
+    get:
+      tags:
+        - Info
+      summary: List IP addresses
+      operationId: Info_listIpAddresses
+      description: "Returns a list of IP addresses that you need to allowlist if you’re using a firewall or Custom SMTP provider’s IP access management settings to deny access to unknown IP addresses.\n\nThese addresses apply to all message types and webhooks, except push notifications."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/messages:
+    get:
+      tags:
+        - Messages
+      summary: List messages
+      operationId: Messages_listDeliveries
+      description: "Return a list of deliveries, including metrics for each delivery, for messages in your workspace. The request body contains filters determining the deliveries you want to return information about.\n\nUse the start_ts and end_ts parameters to find messages within a time range. We limit your requests to 6 months. If your request doesn’t include start_ts and end_ts parameters, we’ll return the most recent 6 months of deliveries. If start_ts is greater than 6-months before end_ts, we only send back 6 months of data. If only end_ts is specified, we return 6 months of data before this timestamp. If only start_ts is specified, we then set the end_ts to the current time and deliver 6 months of data prior to this timestamp."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/messages/{message_id}":
+    get:
+      tags:
+        - Messages
+      summary: Get a message
+      operationId: Messages_getMessageMetrics
+      description: "Return a information about, and metrics for, a delivery—the instance of a message intended for an individual recipient person."
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/messages/{message_id}/archived_message":
+    get:
+      tags:
+        - Messages
+      summary: Get an archived message
+      operationId: Messages_getArchivedMessage
+      description: "Returns the archived copy of a delivery, including the message body, recipient, and metrics. This endpoint is limited to 100 requests per day."
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/newsletters:
+    get:
+      tags:
+        - Newsletters
+      summary: List newsletters
+      operationId: Newsletters_listNewsletters
+      description: Returns a list of your newsletters and associated metadata.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}":
+    get:
+      tags:
+        - Newsletters
+      summary: Get a newsletter
+      operationId: Newsletters_getMetadata
+      description: Returns metadata for an individual newsletter.
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/contents":
+    get:
+      tags:
+        - Newsletters
+      summary: List newsletter variants
+      operationId: Newsletters_listVariants
+      description: "Returns the content variants of a newsletter—these are either different languages in a multi-language newsletter or A/B tests."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/contents/{content_id}":
+    get:
+      tags:
+        - Newsletters
+      summary: Get a newsletter variant
+      operationId: Newsletters_getVariantInfo
+      description: "Returns information about a specific variant of a newsletter, where a variant is either a language in a multi-language newsletter or a part of an A/B test."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Newsletters
+      summary: Update a newsletter variant
+      operationId: Newsletters_updateVariantContents
+      description: "Update the contents of a newsletter variant (a specific language of your message or a part of an A/B test), including the body of a newsletter."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/contents/{content_id}/metrics":
+    get:
+      tags:
+        - Newsletters
+      summary: Get metrics for a variant
+      operationId: Newsletters_getVariantMetrics
+      description: "Returns a metrics for an individual newsletter variant—either an individual language in a multi-language newsletter or a message in an A/B test. This endpoint returns metrics both in total and in steps (days, weeks, etc) over a period of time. Stepped series metrics are arranged from oldest to newest (i.e. the 0-index for any result is the oldest period/step).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/contents/{content_id}/metrics/links":
+    get:
+      tags:
+        - Newsletters
+      summary: Get newsletter variant link metrics
+      operationId: Newsletters_getNewsletterVariantLinkMetrics
+      description: "Returns link click metrics for an individual newsletter variant—an individual language in a multi-language newsletter or a message in an A/B test. Unless you specify otherwise, the response contains data for the maximum period by days (45 days).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/language/{language}":
+    get:
+      tags:
+        - Newsletters
+      summary: Get a translation of a newsletter variant
+      operationId: Newsletters_getTranslation
+      description: "Returns information about a specific language variant of a newsletter. If your newsletter includes A/B tests, use Get a translation in a newsletter test group."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Newsletters
+      summary: Update a translation of a newsletter variant
+      operationId: Newsletters_updateTranslation
+      description: "Update the translation of a newsletter variant. If your newsletter includes A/B tests, use Update a translation in a newsletter test group."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/messages":
+    get:
+      tags:
+        - Newsletters
+      summary: Get newsletter message metadata
+      operationId: Newsletters_getMessageMetadata
+      description: "Returns information about the deliveries (instances of messages sent to individual people) sent from a newsletter. Provide query parameters to refine the metrics you want to return.\n\nUse the start_ts and end_ts to find messages within a time range. If your request doesn’t include start_ts and end_ts parameters, we’ll return up to 6 months of results beginning with the first delivery generated from the newsletter. If your start_ts and end_ts range is more than 12 months, we’ll return 12 months of data from the most recent timestamp in your request."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/metrics":
+    get:
+      tags:
+        - Newsletters
+      summary: Get newsletter metrics
+      operationId: Newsletters_getMetrics
+      description: "Returns a list of metrics for an individual newsletter in steps (days, weeks, etc). We return metrics from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/metrics/links":
+    get:
+      tags:
+        - Newsletters
+      summary: Get newsletter link metrics
+      operationId: Newsletters_getLinkMetrics
+      description: "Returns metrics for link clicks within a newsletter, both in total and in series periods (days, weeks, etc). series metrics are ordered oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/test_group/{test_group_id}/language/{language}":
+    get:
+      tags:
+        - Newsletters
+      summary: Get a translation in a newsletter test group
+      operationId: Newsletters_getTranslationInfo
+      description: Returns information about a specific language variant of a newsletter in an A/B test group. You can retrieve test_group_ids from Get variants in a newsletter test group.
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: test_group_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Newsletters
+      summary: Update a translation in a newsletter test group
+      operationId: Newsletters_updateTranslation_2
+      description: Update the translation of a newsletter variant in an A/B test. You can retrieve a list of test_group_ids from Get variants in a newsletter test group.
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: test_group_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/newsletters/{newsletter_id}/test_groups":
+    get:
+      tags:
+        - Newsletters
+      summary: List A/B test groups in a newsletter
+      operationId: Newsletters_listTestGroups
+      description: "Returns information about each test group in a newsletter, including content ids for each group."
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/object_types:
+    get:
+      tags:
+        - Objects
+      summary: List object types
+      operationId: Objects_getAllObjectTypes
+      description: "Returns a list of object types in your system. Because each object type is an incrementing ID, you may need to use this endpoint to find the ID of the object type you want to query, create, or modify."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/objects:
+    post:
+      tags:
+        - Objects
+      summary: Find objects
+      operationId: Objects_findObjectsFilter
+      description: "Use a set of filter conditions to find objects in your workspace. Returns a list of object IDs that you can use to look up object attributes, or to create or modify objects.\n\nThe list is paged if you have a large number of objects. You can set the limit for the number of objects returned, and use the start to page through the results. It’s possible that you’ll see duplicate entries across pages. If you want to export objects or relationships, you may want to use the export feature in our UI to return complete results."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/objects/{object_type_id}/{object_id}/attributes":
+    get:
+      tags:
+        - Objects
+      summary: Get Object Attributes
+      operationId: Objects_getAttributes
+      description: "Get a list of attributes for an object. Attributes are things you know about an object—like an account name, billing date, etc."
+      parameters:
+        - name: object_type_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/objects/{object_type_id}/{object_id}/relationships":
+    get:
+      tags:
+        - Objects
+      summary: Get Object Relationships
+      operationId: Objects_getObjectRelationships
+      description: "Get a list of people people related to an object.\n\nYou can use the start parameter with the next property in responses to return pages of results. However, it’s possible that you’ll see duplicate entries across pages. If you want to export objects or relationships, you may want to use the export feature in our UI to return complete results."
+      parameters:
+        - name: object_type_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/reporting_webhooks:
+    get:
+      tags:
+        - ReportingWebhooks
+      summary: List reporting webhooks
+      operationId: ReportingWebhooks_listReportingWebhooks
+      description: Return a list of all of your reporting webhooks
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    post:
+      tags:
+        - ReportingWebhooks
+      summary: Create a reporting webhook
+      operationId: ReportingWebhooks_createWebhookConfig
+      description: Create a new webhook configuration.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/reporting_webhooks/{webhook_id}":
+    delete:
+      tags:
+        - ReportingWebhooks
+      summary: Delete a reporting webhook
+      operationId: ReportingWebhooks_deleteWebhookConfiguration
+      description: Delete a reporting webhook’s configuration.
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    get:
+      tags:
+        - ReportingWebhooks
+      summary: Get a reporting webhook
+      operationId: ReportingWebhooks_getWebhookInfo
+      description: Returns information about a specific reporting webhook.
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - ReportingWebhooks
+      summary: Update a webhook configuration
+      operationId: ReportingWebhooks_updateConfiguration
+      description: "Update the configuration of a reporting webhook. Turn events on or off, change the webhook URL, etc."
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/segments:
+    get:
+      tags:
+        - Segments
+      summary: List segments
+      operationId: Segments_list
+      description: Retrieve a list of all of your segments.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    post:
+      tags:
+        - Segments
+      summary: Create a manual segment
+      operationId: Segments_createManualSegment
+      description: Create a manual segment with a name and a description. This request creates an empty segment.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/segments/{segment_id}":
+    delete:
+      tags:
+        - Segments
+      summary: Delete a segment
+      operationId: Segments_deleteManualSegment
+      description: Delete a manual segment.
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    get:
+      tags:
+        - Segments
+      summary: Get a segment
+      operationId: Segments_getSegmentInfo
+      description: Return information about a segment.
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/segments/{segment_id}/customer_count":
+    get:
+      tags:
+        - Segments
+      summary: Get a segment customer count
+      operationId: Segments_getCustomerCount
+      description: Returns the membership count for a segment.
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/segments/{segment_id}/membership":
+    get:
+      tags:
+        - Segments
+      summary: List customers in a segment
+      operationId: Segments_listMembership
+      description: "Returns customers in a segment. This endpoint returns an array of identifiers; each object in the array represents a person and contains the identifier values allowed in your workspace. In general, we recommend that you use identifiers rather than ids to find people, because it provides more information.\n\nIf your workspace does not use email as a unique identifier for people, identifiers does not contain email values. Go to your Workspace Settings to find out which identifiers your workspace supports.\n\nThe ids array only lists ID values for people in a segment; if your workspace uses both email and id as identifiers, it’s possible that a member of your segment does not have an id value, resulting in an empty string in the ids array."
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/segments/{segment_id}/used_by":
+    get:
+      tags:
+        - Segments
+      summary: "Get a segment's dependencies"
+      operationId: Segments_getDependencies
+      description: Use this endpoint to find out which campaigns and newsletters use a segment.
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/campaigns/{broadcast_id}/triggers":
+    post:
+      tags:
+        - SendMessages
+      summary: Trigger a broadcast
+      operationId: SendMessages_triggerBroadcast
+      description: "Manually trigger a broadcast, and provide data to populate messages in your trigger. The shape of the request changes based on the type of audience you broadcast to: a segment, a list of emails, a list of customer IDs, a map of users, or a data file. You can reference properties in the data object from this request using liquid—{{trigger.<property_in_data_obj>}}.\n\nIf your broadcast produces a 422 error, you can get more information about the errors to see what went wrong.\n\nThis endpoint is rate-limited to one request every 10 seconds. After exceeding this, you’ll receive a status of 429. Broadcasts are optimized to send messages to a large audience and not for one-to-one interactions. Use our transactional API or event-triggered campaigns to respond to your audience on an individual, one-to-one basis."
+      parameters:
+        - name: broadcast_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/send/email:
+    post:
+      tags:
+        - SendMessages
+      summary: Send a transactional email
+      operationId: SendMessages_transactionalEmail
+      description: "Send a transactional email. You can send a message using a transactional_message_id or send your own body, subject, and from values at send time. The transactional_message_id can be either the numerical ID for the template or the Trigger Name that you assigned the template.\n\nIf you want to send your own body, subject, and from values to populate your message at send time, we recommend that you pass a transactional_message_id anyway; the values you pass in the request will override the template.\n\nYou can find your transactional_message_id from the code sample in the Overview tab for your transactional message in the user interface, or you can look up a list of your transactional messages through the App API.\n\nCustomer.io attributes metrics to a transactional_message_id; if you don’t provide a transactional_message_id, we attribute metrics to \"transactional_message_id\": 1. You can create empty transactional messages in the UI and override the body, subject, and from values at send time. This provides flexibility in your integration and lets you organize metrics (rather than gathering metrics for all of your transactional messages against a single ID)."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/send/push:
+    post:
+      tags:
+        - SendMessages
+      summary: Send a transactional push
+      operationId: SendMessages_transactionalPush
+      description: "Send a transactional push. You send a message using a transactional_message_id for a transactional push message template composed in the user interface. You can optionally override any of the template values at send time. The transactional_message_id can be either the numerical ID for the template or the Trigger Name that you assigned the template.\n\nYou can find your transactional_message_id from the code sample in the Overview tab for your transactional message in the user interface, or you can look up a list of your transactional messages through the App API."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/sender_identities:
+    get:
+      tags:
+        - SenderIdentities
+      summary: List sender identities
+      operationId: SenderIdentities_list
+      description: Returns a list of senders in your workspace. Senders are who your messages are “from”.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/sender_identities/{sender_id}":
+    get:
+      tags:
+        - SenderIdentities
+      summary: Get a sender
+      operationId: SenderIdentities_getSenderInfo
+      description: Returns information about a specific sender.
+      parameters:
+        - name: sender_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/sender_identities/{sender_id}/used_by":
+    get:
+      tags:
+        - SenderIdentities
+      summary: Get sender usage data
+      operationId: SenderIdentities_getUsageData
+      description: Returns lists of the campaigns and newsletters that use a sender.
+      parameters:
+        - name: sender_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/snippets:
+    get:
+      tags:
+        - Snippets
+      summary: List snippets
+      operationId: Snippets_list
+      description: "Returns a list of snippets in your workspace. Snippets are pieces of reusable content, like a common footer for your emails."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Snippets
+      summary: Create or update snippets
+      operationId: Snippets_createOrUpdate
+      description: "In your payload, you’ll pass a name and value. Snippet names are unique. If the snippet name does not exist, we’ll create a new snippet. If the name exists, we’ll update the existing snippet."
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/snippets/{snippet_name}":
+    delete:
+      tags:
+        - Snippets
+      summary: Delete a snippet
+      operationId: Snippets_removeSnippet
+      description: "Remove a snippet. You can only remove a snippet that is not in use. If your snippet is in use, you’ll receive a 400 error."
+      parameters:
+        - name: snippet_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/subscription_topics:
+    get:
+      tags:
+        - SubscriptionCenter
+      summary: List subscription topics
+      operationId: SubscriptionCenter_listTopics
+      description: "Returns a list of subscription topics in your workspace. If there are no topics, it returns an empty array."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/transactional:
+    get:
+      tags:
+        - Transactional
+      summary: List transactional messages
+      operationId: Transactional_listMessages
+      description: Returns a list of your transactional messages—the transactional IDs that you use to trigger an individual transactional delivery. This endpoint does not return information about deliveries (instances of a message sent to a person) themselves.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}":
+    get:
+      tags:
+        - Transactional
+      summary: Get a transactional message
+      operationId: Transactional_getMessageInfo
+      description: Returns information about an individual transactional message.
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/content/{content_id}":
+    put:
+      tags:
+        - Transactional
+      summary: Update a transactional message
+      operationId: Transactional_updateMessageContent
+      description: "Update the body of a transactional email. This fully overwrites your existing transactional message. We’ll use your updated content for any future transactional requests (/v1/send/email), so make sure that you test your message before you update it."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: content_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/contents":
+    get:
+      tags:
+        - Transactional
+      summary: List all variants of a transactional message
+      operationId: Transactional_listContentVariants
+      description: "Returns the content variants of a transactional message, where each variant represents a different language."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/language/{language}":
+    get:
+      tags:
+        - Transactional
+      summary: Get a translation of a transactional message
+      operationId: Transactional_getMessageTranslation
+      description: "Returns information about a translation of an individual transactional message, including the message content."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+    put:
+      tags:
+        - Transactional
+      summary: Update a translation of a transactional message
+      operationId: Transactional_updateTranslation
+      description: Update the body and other data of a specific language variant for a transactional message. This fully overwrites this specific translation of your existing transactional message.
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenericObject"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/messages":
+    get:
+      tags:
+        - Transactional
+      summary: Get transactional message deliveries
+      operationId: Transactional_getMessageDeliveries
+      description: "Returns information about the deliveries (instances of messages sent to individual people) from a transactional message. Provide query parameters to refine the metrics you want to return.\n\nUse the start_ts and end_ts to find messages within a time range. If your request doesn’t include start_ts and end_ts parameters, we’ll return the most recent 6 months of messages. If your start_ts and end_ts range is more than 12 months, we’ll return 12 months of data from the most recent timestamp in your request."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/metrics":
+    get:
+      tags:
+        - Transactional
+      summary: Get transactional message metrics
+      operationId: Transactional_getMessageMetrics
+      description: "Returns a list of metrics for a transactional message in steps (days, weeks, etc). We return metrics from oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  "/v1/transactional/{transactional_id}/metrics/links":
+    get:
+      tags:
+        - Transactional
+      summary: Get transactional message link metrics
+      operationId: Transactional_getMessageLinkMetrics
+      description: "Returns metrics for clicked links from a transactional message, both in total and in series periods (days, weeks, etc). series metrics are ordered oldest to newest (i.e. the 0-index for any result is the oldest step/period).\n\nYou cannot request fewer than 2 steps of any period (2 hours, 2 days, 2 weeks, or 2 months). For instance, ?period=days&steps=1 means two days - the 48 hours before the API request was made. ?period=days&steps=0 returns the same as the maximum of the period - ?period=days&steps=45. See the steps parameter below for the maximum count of each period."
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+  /v1/workspaces:
+    get:
+      tags:
+        - Workspaces
+      summary: List workspaces
+      operationId: Workspaces_listWorkspaces
+      description: Returns a list of workspaces in your account.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+components:
+  securitySchemes:
+    customerIoAppApiKey:
+      type: http
+      scheme: bearer
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    GenericObject:
+      type: object
+      additionalProperties: true
+    GenericResponse:
+      oneOf:
+        - type: object
+          additionalProperties: true
+        - type: array
+          items:
+            type: object
+            additionalProperties: true
+    ErrorResponse:
+      type: object
+      additionalProperties: true
