@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: Salesforce Bulk API 2.0
+  version: 1.0.0
+  description: Asynchronous large-volume ingest, delete, upsert, and query jobs for Salesforce data.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://{instanceUrl}
+    variables:
+      instanceUrl:
+        default: your-domain.my.salesforce.com
+security:
+  - salesforceBearerAuth: []
+tags:
+  - name: Ingest Jobs
+    description: Create, upload, monitor, close, abort, and delete ingest jobs.
+  - name: Query Jobs
+    description: Create, monitor, abort, and delete asynchronous query jobs.
+  - name: Job Results
+    description: Retrieve CSV result files for completed jobs.
+paths:
+  /services/data/v{version}/jobs/ingest:
+    post:
+      tags:
+        - Ingest Jobs
+      summary: Create ingest job
+      description: Creates a Bulk API 2.0 ingest job for inserting, updating, upserting, deleting, or hard-deleting records.
+      operationId: createIngestJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIngestJobRequest"
+            example:
+              object: Account
+              operation: insert
+              contentType: CSV
+              lineEnding: LF
+      responses:
+        "200":
+          description: Created ingest job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestJob"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    get:
+      tags:
+        - Ingest Jobs
+      summary: List ingest jobs
+      description: Lists Bulk API 2.0 ingest jobs.
+      operationId: listIngestJobs
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/isPkChunkingEnabled"
+        - $ref: "#/components/parameters/jobType"
+        - $ref: "#/components/parameters/concurrencyMode"
+      responses:
+        "200":
+          description: Ingest jobs.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestJobList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/jobs/ingest/{jobId}:
+    get:
+      tags:
+        - Ingest Jobs
+      summary: Get ingest job
+      description: Gets details and processing status for an ingest job.
+      operationId: getIngestJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Ingest job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestJob"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Ingest Jobs
+      summary: Close or abort ingest job
+      description: Updates an ingest job state to start processing uploaded data or abort the job.
+      operationId: updateIngestJobState
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateIngestJobStateRequest"
+            example:
+              state: UploadComplete
+      responses:
+        "200":
+          description: Updated ingest job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestJob"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Ingest Jobs
+      summary: Delete ingest job
+      description: Deletes an ingest job.
+      operationId: deleteIngestJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "204":
+          description: Ingest job deleted.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/ingest/{jobId}/batches:
+    put:
+      tags:
+        - Ingest Jobs
+      summary: Upload ingest job data
+      description: Uploads CSV record data for an open ingest job.
+      operationId: uploadIngestJobData
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+            example: |
+              Name
+              Acme
+      responses:
+        "201":
+          description: CSV data uploaded.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/ingest/{jobId}/successfulResults:
+    get:
+      tags:
+        - Job Results
+      summary: Get successful ingest results
+      description: Returns CSV rows for records successfully processed by an ingest job.
+      operationId: getSuccessfulIngestResults
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          $ref: "#/components/responses/CsvResults"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/ingest/{jobId}/failedResults:
+    get:
+      tags:
+        - Job Results
+      summary: Get failed ingest results
+      description: Returns CSV rows for records that failed processing in an ingest job.
+      operationId: getFailedIngestResults
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          $ref: "#/components/responses/CsvResults"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/ingest/{jobId}/unprocessedrecords:
+    get:
+      tags:
+        - Job Results
+      summary: Get unprocessed ingest records
+      description: Returns CSV rows that were not processed for an ingest job.
+      operationId: getUnprocessedIngestRecords
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          $ref: "#/components/responses/CsvResults"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/query:
+    post:
+      tags:
+        - Query Jobs
+      summary: Create query job
+      description: Creates an asynchronous Bulk API 2.0 SOQL query job.
+      operationId: createQueryJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQueryJobRequest"
+            example:
+              operation: query
+              query: SELECT Id, Name FROM Account
+              contentType: CSV
+              lineEnding: LF
+      responses:
+        "200":
+          description: Created query job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryJob"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    get:
+      tags:
+        - Query Jobs
+      summary: List query jobs
+      description: Lists Bulk API 2.0 query jobs.
+      operationId: listQueryJobs
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/isPkChunkingEnabled"
+        - $ref: "#/components/parameters/jobType"
+      responses:
+        "200":
+          description: Query jobs.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryJobList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /services/data/v{version}/jobs/query/{jobId}:
+    get:
+      tags:
+        - Query Jobs
+      summary: Get query job
+      description: Gets details and processing status for a query job.
+      operationId: getQueryJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Query job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryJob"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Query Jobs
+      summary: Abort query job
+      description: Updates a query job state to abort processing.
+      operationId: updateQueryJobState
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQueryJobStateRequest"
+            example:
+              state: Aborted
+      responses:
+        "200":
+          description: Updated query job.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryJob"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Query Jobs
+      summary: Delete query job
+      description: Deletes a query job.
+      operationId: deleteQueryJob
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "204":
+          description: Query job deleted.
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /services/data/v{version}/jobs/query/{jobId}/results:
+    get:
+      tags:
+        - Job Results
+      summary: Get query job results
+      description: Returns CSV result rows for a completed query job.
+      operationId: getQueryJobResults
+      parameters:
+        - $ref: "#/components/parameters/version"
+        - $ref: "#/components/parameters/jobId"
+        - name: locator
+          in: query
+          required: false
+          description: Locator for a specific page of query results.
+          schema:
+            type: string
+        - name: maxRecords
+          in: query
+          required: false
+          description: Maximum number of records to return in this result set.
+          schema:
+            type: integer
+      responses:
+        "200":
+          $ref: "#/components/responses/CsvResults"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    salesforceBearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    version:
+      name: version
+      in: path
+      required: true
+      description: Salesforce API version without the leading `v`.
+      schema:
+        type: string
+        example: "60.0"
+    jobId:
+      name: jobId
+      in: path
+      required: true
+      description: Bulk API 2.0 job ID.
+      schema:
+        type: string
+        example: 7505g00000abcDeAAI
+    isPkChunkingEnabled:
+      name: isPkChunkingEnabled
+      in: query
+      required: false
+      description: Filter jobs by whether PK chunking is enabled.
+      schema:
+        type: boolean
+    jobType:
+      name: jobType
+      in: query
+      required: false
+      description: Filter jobs by job type.
+      schema:
+        type: string
+        enum:
+          - Classic
+          - V2Ingest
+          - BigObjectIngest
+          - V2Query
+    concurrencyMode:
+      name: concurrencyMode
+      in: query
+      required: false
+      description: Filter ingest jobs by concurrency mode.
+      schema:
+        type: string
+        enum:
+          - Parallel
+          - Serial
+  responses:
+    CsvResults:
+      description: CSV result data.
+      content:
+        text/csv:
+          schema:
+            type: string
+    BadRequest:
+      description: Request was not valid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+    Unauthorized:
+      description: Authentication failed or the bearer token is missing.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+    NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SalesforceErrors"
+  schemas:
+    CreateIngestJobRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        object:
+          type: string
+          description: API name of the target Salesforce object.
+          example: Account
+        operation:
+          $ref: "#/components/schemas/IngestOperation"
+        externalIdFieldName:
+          type: string
+          description: External ID field name for upsert operations.
+          example: External_Id__c
+        contentType:
+          type: string
+          enum:
+            - CSV
+          default: CSV
+        lineEnding:
+          $ref: "#/components/schemas/LineEnding"
+        columnDelimiter:
+          $ref: "#/components/schemas/ColumnDelimiter"
+      required:
+        - object
+        - operation
+        - contentType
+    CreateQueryJobRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        operation:
+          $ref: "#/components/schemas/QueryOperation"
+        query:
+          type: string
+          description: SOQL query to execute asynchronously.
+          example: SELECT Id, Name FROM Account
+        contentType:
+          type: string
+          enum:
+            - CSV
+          default: CSV
+        lineEnding:
+          $ref: "#/components/schemas/LineEnding"
+        columnDelimiter:
+          $ref: "#/components/schemas/ColumnDelimiter"
+      required:
+        - operation
+        - query
+        - contentType
+    UpdateIngestJobStateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          enum:
+            - UploadComplete
+            - Aborted
+      required:
+        - state
+    UpdateQueryJobStateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          enum:
+            - Aborted
+      required:
+        - state
+    IngestOperation:
+      type: string
+      enum:
+        - insert
+        - update
+        - upsert
+        - delete
+        - hardDelete
+    QueryOperation:
+      type: string
+      enum:
+        - query
+        - queryAll
+    LineEnding:
+      type: string
+      enum:
+        - LF
+        - CRLF
+    ColumnDelimiter:
+      type: string
+      enum:
+        - BACKQUOTE
+        - CARET
+        - COMMA
+        - PIPE
+        - SEMICOLON
+        - TAB
+      default: COMMA
+    IngestJobList:
+      type: object
+      additionalProperties: true
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/IngestJob"
+        done:
+          type: boolean
+        nextRecordsUrl:
+          type: string
+    QueryJobList:
+      type: object
+      additionalProperties: true
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/QueryJob"
+        done:
+          type: boolean
+        nextRecordsUrl:
+          type: string
+    IngestJob:
+      allOf:
+        - $ref: "#/components/schemas/BulkJob"
+        - type: object
+          additionalProperties: true
+          properties:
+            operation:
+              $ref: "#/components/schemas/IngestOperation"
+            object:
+              type: string
+              example: Account
+            state:
+              type: string
+              example: Open
+            externalIdFieldName:
+              type: string
+              example: External_Id__c
+    QueryJob:
+      allOf:
+        - $ref: "#/components/schemas/BulkJob"
+        - type: object
+          additionalProperties: true
+          properties:
+            operation:
+              $ref: "#/components/schemas/QueryOperation"
+            query:
+              type: string
+              example: SELECT Id, Name FROM Account
+            state:
+              type: string
+              example: JobComplete
+    BulkJob:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+          example: 7505g00000abcDeAAI
+        operation:
+          type: string
+        object:
+          type: string
+        createdById:
+          type: string
+          example: 0055g000000abcDAAQ
+        createdDate:
+          type: string
+          format: date-time
+        systemModstamp:
+          type: string
+          format: date-time
+        state:
+          type: string
+        concurrencyMode:
+          type: string
+          example: Parallel
+        contentType:
+          type: string
+          example: CSV
+        apiVersion:
+          type: number
+          format: float
+          example: 60.0
+        jobType:
+          type: string
+          example: V2Ingest
+        lineEnding:
+          $ref: "#/components/schemas/LineEnding"
+        columnDelimiter:
+          $ref: "#/components/schemas/ColumnDelimiter"
+        numberRecordsProcessed:
+          type: integer
+          format: int64
+        numberRecordsFailed:
+          type: integer
+          format: int64
+        retries:
+          type: integer
+        totalProcessingTime:
+          type: integer
+          description: Total processing time in milliseconds.
+    SalesforceErrors:
+      type: array
+      items:
+        $ref: "#/components/schemas/SalesforceError"
+    SalesforceError:
+      type: object
+      additionalProperties: true
+      properties:
+        message:
+          type: string
+        errorCode:
+          type: string
+        fields:
+          type: array
+          items:
+            type: string

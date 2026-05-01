@@ -1,0 +1,1933 @@
+openapi: 3.0.3
+info:
+  title: Postmark
+  version: 1.0.0
+  description: Send transactional email and manage Postmark server resources.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.postmarkapp.com
+security:
+  - postmarkServerToken: []
+tags:
+  - name: Sending
+    description: Send transactional emails through Postmark.
+  - name: Messages
+    description: Search inbound and outbound messages.
+  - name: Bounces
+    description: Inspect and manage message bounces.
+  - name: Stats
+    description: Retrieve outbound email statistics.
+  - name: Server Configuration
+    description: View and update the current Postmark server.
+  - name: Templates
+    description: Manage templates associated with the current server.
+  - name: Inbound Rules
+    description: Manage inbound rule triggers for the current server.
+paths:
+  /email:
+    post:
+      tags:
+        - Sending
+      summary: Send a single email
+      operationId: Sending_sendSingleEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /email/batch:
+    post:
+      tags:
+        - Sending
+      summary: Send a batch of emails
+      operationId: Sending_sendBatchEmails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailBatchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailBatchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /email/withTemplate:
+    post:
+      tags:
+        - Sending
+      summary: Send an email using a template
+      operationId: Sending_sendEmailWithTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailWithTemplateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /email/batchWithTemplates:
+    post:
+      tags:
+        - Sending
+      summary: Send a batch of emails using templates
+      operationId: Sending_sendBatchWithTemplates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailTemplatedBatchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailBatchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/inbound:
+    get:
+      tags:
+        - Messages
+      summary: Search inbound messages
+      operationId: Messages_searchInboundMessages
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+        - name: recipient
+          in: query
+          description: Filter by the recipient email address.
+          schema:
+            type: string
+        - name: fromemail
+          in: query
+          description: Filter by the sender email address.
+          schema:
+            type: string
+        - name: subject
+          in: query
+          description: Filter by email subject.
+          schema:
+            type: string
+        - name: mailboxhash
+          in: query
+          description: Filter by mailbox hash.
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: Filter by tag.
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by inbound message status.
+          schema:
+            type: string
+            enum:
+              - blocked
+              - processed
+              - queued
+              - failed
+              - scheduled
+        - $ref: '#/components/parameters/ToDate'
+        - $ref: '#/components/parameters/FromDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboundSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/inbound/{messageid}/details:
+    get:
+      tags:
+        - Messages
+      summary: Get inbound message details
+      operationId: Messages_getInboundMessageDetails
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboundMessageDetail'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/inbound/{messageid}/bypass:
+    put:
+      tags:
+        - Messages
+      summary: Bypass rules for a blocked inbound message
+      operationId: Messages_bypassInboundMessageRules
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/inbound/{messageid}/retry:
+    put:
+      tags:
+        - Messages
+      summary: Retry a failed inbound message
+      operationId: Messages_retryInboundMessage
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound:
+    get:
+      tags:
+        - Messages
+      summary: Search outbound messages
+      operationId: Messages_searchOutboundMessages
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+        - name: recipient
+          in: query
+          description: Filter by recipient.
+          schema:
+            type: string
+        - name: fromemail
+          in: query
+          description: Filter by sender email address.
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: Filter by tag.
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by outbound message status.
+          schema:
+            type: string
+            enum:
+              - queued
+              - sent
+        - $ref: '#/components/parameters/ToDate'
+        - $ref: '#/components/parameters/FromDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/{messageid}/details:
+    get:
+      tags:
+        - Messages
+      summary: Get outbound message details
+      operationId: Messages_getOutboundMessageDetails
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundMessageDetail'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/{messageid}/dump:
+    get:
+      tags:
+        - Messages
+      summary: Get outbound message dump
+      operationId: Messages_getOutboundMessageDump
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDumpResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/opens:
+    get:
+      tags:
+        - Messages
+      summary: List opens for all outbound messages
+      operationId: Messages_listOutboundMessageOpens
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Recipient'
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/ClientName'
+        - $ref: '#/components/parameters/ClientCompany'
+        - $ref: '#/components/parameters/ClientFamily'
+        - $ref: '#/components/parameters/OsName'
+        - $ref: '#/components/parameters/OsFamily'
+        - $ref: '#/components/parameters/OsCompany'
+        - $ref: '#/components/parameters/Platform'
+        - $ref: '#/components/parameters/Country'
+        - $ref: '#/components/parameters/Region'
+        - $ref: '#/components/parameters/City'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/opens/{messageid}:
+    get:
+      tags:
+        - Messages
+      summary: Get opens for an outbound message
+      operationId: Messages_getOutboundMessageOpens
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/clicks:
+    get:
+      tags:
+        - Messages
+      summary: List clicks for all outbound messages
+      operationId: Messages_listOutboundMessageClicks
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Recipient'
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/ClientName'
+        - $ref: '#/components/parameters/ClientCompany'
+        - $ref: '#/components/parameters/ClientFamily'
+        - $ref: '#/components/parameters/OsName'
+        - $ref: '#/components/parameters/OsFamily'
+        - $ref: '#/components/parameters/OsCompany'
+        - $ref: '#/components/parameters/Platform'
+        - $ref: '#/components/parameters/Country'
+        - $ref: '#/components/parameters/Region'
+        - $ref: '#/components/parameters/City'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /messages/outbound/clicks/{messageid}:
+    get:
+      tags:
+        - Messages
+      summary: Get clicks for an outbound message
+      operationId: Messages_getOutboundMessageClicks
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /bounces:
+    get:
+      tags:
+        - Bounces
+      summary: List bounces
+      operationId: Bounces_listBounces
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+        - name: type
+          in: query
+          description: Filter by bounce type.
+          schema:
+            type: string
+        - name: inactive
+          in: query
+          description: Filter by recipients deactivated by the bounce.
+          schema:
+            type: boolean
+        - name: emailFilter
+          in: query
+          description: Filter by email address.
+          schema:
+            type: string
+        - name: messageID
+          in: query
+          description: Filter by message ID.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/ToDate'
+        - $ref: '#/components/parameters/FromDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BounceSearchResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /bounces/{bounceid}:
+    get:
+      tags:
+        - Bounces
+      summary: Get a single bounce
+      operationId: Bounces_getBounce
+      parameters:
+        - $ref: '#/components/parameters/BounceId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BounceInfo'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /bounces/{bounceid}/dump:
+    get:
+      tags:
+        - Bounces
+      summary: Get bounce dump
+      operationId: Bounces_getBounceDump
+      parameters:
+        - $ref: '#/components/parameters/BounceId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BounceDumpResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /bounces/{bounceid}/activate:
+    put:
+      tags:
+        - Bounces
+      summary: Activate a bounce
+      operationId: Bounces_activateBounce
+      parameters:
+        - $ref: '#/components/parameters/BounceId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BounceActivationResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /deliverystats:
+    get:
+      tags:
+        - Bounces
+      summary: Get delivery stats
+      operationId: Bounces_getDeliveryStats
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound:
+    get:
+      tags:
+        - Stats
+      summary: Get outbound overview
+      operationId: Stats_getOutboundOverview
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundOverviewStats'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/sends:
+    get:
+      tags:
+        - Stats
+      summary: Get sent counts
+      operationId: Stats_getSentCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/bounces:
+    get:
+      tags:
+        - Stats
+      summary: Get bounce counts
+      operationId: Stats_getBounceCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BounceStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/spam:
+    get:
+      tags:
+        - Stats
+      summary: Get spam complaint counts
+      operationId: Stats_getSpamComplaintCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/tracked:
+    get:
+      tags:
+        - Stats
+      summary: Get tracked email counts
+      operationId: Stats_getTrackedEmailCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackedStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/opens:
+    get:
+      tags:
+        - Stats
+      summary: Get email open counts
+      operationId: Stats_getEmailOpenCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/opens/platforms:
+    get:
+      tags:
+        - Stats
+      summary: Get email platform usage
+      operationId: Stats_getEmailPlatformUsage
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/opens/emailclients:
+    get:
+      tags:
+        - Stats
+      summary: Get email client usage
+      operationId: Stats_getEmailClientUsage
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/clicks:
+    get:
+      tags:
+        - Stats
+      summary: Get click counts
+      operationId: Stats_getClickCounts
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/clicks/browserfamilies:
+    get:
+      tags:
+        - Stats
+      summary: Get browser usage by family
+      operationId: Stats_getClickBrowserFamilies
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/clicks/platforms:
+    get:
+      tags:
+        - Stats
+      summary: Get browser platform usage
+      operationId: Stats_getClickBrowserPlatforms
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /stats/outbound/clicks/location:
+    get:
+      tags:
+        - Stats
+      summary: Get click counts by body location
+      operationId: Stats_getClickLocation
+      parameters:
+        - $ref: '#/components/parameters/Tag'
+        - $ref: '#/components/parameters/FromDate'
+        - $ref: '#/components/parameters/ToDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickLocationStatsResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /server:
+    get:
+      tags:
+        - Server Configuration
+      summary: Get server configuration
+      operationId: ServerConfiguration_getConfiguration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerConfiguration'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    put:
+      tags:
+        - Server Configuration
+      summary: Update server configuration
+      operationId: ServerConfiguration_updateConfiguration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditServerConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerConfiguration'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /templates:
+    get:
+      tags:
+        - Templates
+      summary: List templates
+      operationId: Templates_listTemplates
+      parameters:
+        - name: Count
+          in: query
+          required: true
+          description: The number of templates to return.
+          schema:
+            type: number
+        - name: Offset
+          in: query
+          required: true
+          description: The number of templates to skip before returning results.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateListResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+        - Templates
+      summary: Create a template
+      operationId: Templates_createTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /templates/validate:
+    post:
+      tags:
+        - Templates
+      summary: Validate template content
+      operationId: Templates_validateTemplateContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateValidationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateValidationResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /templates/{templateIdOrAlias}:
+    get:
+      tags:
+        - Templates
+      summary: Get a template
+      operationId: Templates_getTemplate
+      parameters:
+        - $ref: '#/components/parameters/TemplateIdOrAlias'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    put:
+      tags:
+        - Templates
+      summary: Update a template
+      operationId: Templates_updateTemplate
+      parameters:
+        - $ref: '#/components/parameters/TemplateIdOrAlias'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditTemplateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+        - Templates
+      summary: Delete a template
+      operationId: Templates_deleteTemplate
+      parameters:
+        - $ref: '#/components/parameters/TemplateIdOrAlias'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /triggers/inboundrules:
+    get:
+      tags:
+        - Inbound Rules
+      summary: List inbound rule triggers
+      operationId: InboundRules_listTriggers
+      parameters:
+        - $ref: '#/components/parameters/Count'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboundRuleListResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+        - Inbound Rules
+      summary: Create an inbound rule trigger
+      operationId: InboundRules_createTrigger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInboundRuleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboundRule'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+  /triggers/inboundrules/{triggerid}:
+    delete:
+      tags:
+        - Inbound Rules
+      summary: Delete an inbound rule trigger
+      operationId: InboundRules_deleteTrigger
+      parameters:
+        - name: triggerid
+          in: path
+          required: true
+          description: The ID of the inbound rule trigger to delete.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+components:
+  parameters:
+    Count:
+      name: count
+      in: query
+      required: true
+      description: Number of records to return per request.
+      schema:
+        type: integer
+        maximum: 500
+    Offset:
+      name: offset
+      in: query
+      required: true
+      description: Number of records to skip.
+      schema:
+        type: integer
+        minimum: 0
+    FromDate:
+      name: fromdate
+      in: query
+      description: Filter records starting from the date specified. For example, 2014-01-01.
+      schema:
+        type: string
+    ToDate:
+      name: todate
+      in: query
+      description: Filter records up to the date specified. For example, 2014-02-01.
+      schema:
+        type: string
+    Tag:
+      name: tag
+      in: query
+      description: Filter by tag.
+      schema:
+        type: string
+    Recipient:
+      name: recipient
+      in: query
+      description: Filter by recipient.
+      schema:
+        type: string
+    ClientName:
+      name: client_name
+      in: query
+      description: Filter by client name.
+      schema:
+        type: string
+    ClientCompany:
+      name: client_company
+      in: query
+      description: Filter by client company.
+      schema:
+        type: string
+    ClientFamily:
+      name: client_family
+      in: query
+      description: Filter by client family.
+      schema:
+        type: string
+    OsName:
+      name: os_name
+      in: query
+      description: Filter by full operating system name.
+      schema:
+        type: string
+    OsFamily:
+      name: os_family
+      in: query
+      description: Filter by operating system family.
+      schema:
+        type: string
+    OsCompany:
+      name: os_company
+      in: query
+      description: Filter by operating system company.
+      schema:
+        type: string
+    Platform:
+      name: platform
+      in: query
+      description: Filter by platform.
+      schema:
+        type: string
+    Country:
+      name: country
+      in: query
+      description: Filter by country.
+      schema:
+        type: string
+    Region:
+      name: region
+      in: query
+      description: Filter by region.
+      schema:
+        type: string
+    City:
+      name: city
+      in: query
+      description: Filter by city.
+      schema:
+        type: string
+    MessageId:
+      name: messageid
+      in: path
+      required: true
+      description: The ID of the message.
+      schema:
+        type: string
+    BounceId:
+      name: bounceid
+      in: path
+      required: true
+      description: The ID of the bounce.
+      schema:
+        type: integer
+    TemplateIdOrAlias:
+      name: templateIdOrAlias
+      in: path
+      required: true
+      description: The TemplateID or Alias value for the template.
+      schema:
+        type: string
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    postmarkServerToken:
+      type: apiKey
+      in: header
+      name: X-Postmark-Server-Token
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        ErrorCode:
+          type: integer
+        Message:
+          type: string
+    Header:
+      type: object
+      properties:
+        Name:
+          type: string
+        Value:
+          type: string
+    HeaderCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Header'
+    Attachment:
+      type: object
+      description: An attachment for an email message.
+      properties:
+        Name:
+          type: string
+        Content:
+          type: string
+          description: Base64-encoded attachment content.
+        ContentType:
+          type: string
+        ContentID:
+          type: string
+    AttachmentCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Attachment'
+    SendEmailRequest:
+      type: object
+      required:
+        - From
+        - To
+        - Subject
+      properties:
+        From:
+          type: string
+          description: Sender email address.
+        To:
+          type: string
+          description: Recipient email address. Multiple addresses are comma separated.
+        Cc:
+          type: string
+          description: Cc recipient email address. Multiple addresses are comma separated.
+        Bcc:
+          type: string
+          description: Bcc recipient email address. Multiple addresses are comma separated.
+        Subject:
+          type: string
+        Tag:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+        ReplyTo:
+          type: string
+        Headers:
+          $ref: '#/components/schemas/HeaderCollection'
+        TrackOpens:
+          type: boolean
+        TrackLinks:
+          $ref: '#/components/schemas/TrackLinks'
+        Attachments:
+          $ref: '#/components/schemas/AttachmentCollection'
+        Metadata:
+          type: object
+          additionalProperties:
+            type: string
+        MessageStream:
+          type: string
+          description: Message stream ID.
+    SendEmailBatchRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/SendEmailRequest'
+    EmailWithTemplateRequest:
+      type: object
+      required:
+        - From
+        - To
+        - TemplateModel
+      properties:
+        From:
+          type: string
+        To:
+          type: string
+        Cc:
+          type: string
+        Bcc:
+          type: string
+        Tag:
+          type: string
+        ReplyTo:
+          type: string
+        Headers:
+          $ref: '#/components/schemas/HeaderCollection'
+        TemplateId:
+          type: integer
+          description: Required if TemplateAlias is not specified.
+        TemplateAlias:
+          type: string
+          description: Required if TemplateId is not specified.
+        TemplateModel:
+          type: object
+          additionalProperties: true
+        InlineCss:
+          type: boolean
+          default: true
+        TrackOpens:
+          type: boolean
+        TrackLinks:
+          $ref: '#/components/schemas/TrackLinks'
+        Attachments:
+          $ref: '#/components/schemas/AttachmentCollection'
+        Metadata:
+          type: object
+          additionalProperties:
+            type: string
+        MessageStream:
+          type: string
+    SendEmailTemplatedBatchRequest:
+      type: object
+      required:
+        - Messages
+      properties:
+        Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailWithTemplateRequest'
+    SendEmailResponse:
+      type: object
+      properties:
+        To:
+          type: string
+        SubmittedAt:
+          type: string
+          format: date-time
+        MessageID:
+          type: string
+        ErrorCode:
+          type: integer
+        Message:
+          type: string
+    SendEmailBatchResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SendEmailResponse'
+    TrackLinks:
+      type: string
+      description: Link tracking mode.
+      enum:
+        - None
+        - HtmlAndText
+        - HtmlOnly
+        - TextOnly
+    MessageResponse:
+      type: object
+      properties:
+        ErrorCode:
+          type: integer
+        Message:
+          type: string
+    OutboundSearchResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboundMessageDetail'
+    InboundSearchResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        InboundMessages:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboundMessageDetail'
+    OutboundMessageDetail:
+      type: object
+      additionalProperties: true
+      properties:
+        MessageID:
+          type: string
+        MessageStream:
+          type: string
+        To:
+          type: array
+          items:
+            type: string
+        Cc:
+          type: array
+          items:
+            type: string
+        Bcc:
+          type: array
+          items:
+            type: string
+        Recipients:
+          type: array
+          items:
+            type: string
+        ReceivedAt:
+          type: string
+          format: date-time
+        From:
+          type: string
+        Subject:
+          type: string
+        Tag:
+          type: string
+        Status:
+          type: string
+        TrackOpens:
+          type: boolean
+        TrackLinks:
+          type: string
+    InboundMessageDetail:
+      type: object
+      additionalProperties: true
+      properties:
+        MessageID:
+          type: string
+        From:
+          type: string
+        To:
+          type: string
+        Cc:
+          type: string
+        ReplyTo:
+          type: string
+        Subject:
+          type: string
+        Date:
+          type: string
+        TextBody:
+          type: string
+        HtmlBody:
+          type: string
+        Tag:
+          type: string
+        MessageStream:
+          type: string
+    MessageDumpResponse:
+      type: object
+      properties:
+        Body:
+          type: string
+    OpenSearchResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        Opens:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenEvent'
+    ClickSearchResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        Clicks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClickEvent'
+    OpenEvent:
+      type: object
+      additionalProperties: true
+      properties:
+        FirstOpen:
+          type: boolean
+        Client:
+          type: object
+          additionalProperties: true
+        OS:
+          type: object
+          additionalProperties: true
+        Platform:
+          type: string
+        ReadSeconds:
+          type: integer
+        OpenedAt:
+          type: string
+          format: date-time
+    ClickEvent:
+      type: object
+      additionalProperties: true
+      properties:
+        OriginalLink:
+          type: string
+        ClickedAt:
+          type: string
+          format: date-time
+        Platform:
+          type: string
+        UserAgent:
+          type: string
+    BounceSearchResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        Bounces:
+          type: array
+          items:
+            $ref: '#/components/schemas/BounceInfo'
+    BounceInfo:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Type:
+          type: string
+        TypeCode:
+          type: integer
+        Name:
+          type: string
+        Tag:
+          type: string
+        MessageID:
+          type: string
+        ServerID:
+          type: integer
+        Description:
+          type: string
+        Details:
+          type: string
+        Email:
+          type: string
+          format: email
+        From:
+          type: string
+        BouncedAt:
+          type: string
+          format: date-time
+        DumpAvailable:
+          type: boolean
+        Inactive:
+          type: boolean
+        CanActivate:
+          type: boolean
+        Subject:
+          type: string
+        Content:
+          type: string
+    BounceDumpResponse:
+      type: object
+      properties:
+        Body:
+          type: string
+          description: Raw source of bounce. If no dump is available this returns an empty string.
+    BounceActivationResponse:
+      type: object
+      properties:
+        Bounce:
+          $ref: '#/components/schemas/BounceInfo'
+        Message:
+          type: string
+    DeliveryStatsResponse:
+      type: object
+      properties:
+        InactiveMails:
+          type: integer
+        Bounces:
+          type: array
+          items:
+            $ref: '#/components/schemas/BounceCount'
+    BounceCount:
+      type: object
+      properties:
+        Name:
+          type: string
+        Type:
+          type: string
+        Count:
+          type: integer
+    CountStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyCount'
+        Total:
+          type: integer
+    DailyCount:
+      type: object
+      properties:
+        Date:
+          type: string
+        Count:
+          type: integer
+    OutboundOverviewStats:
+      type: object
+      additionalProperties: true
+      properties:
+        Sent:
+          type: integer
+        Bounced:
+          type: integer
+        SMTPApiErrors:
+          type: integer
+        BounceRate:
+          type: number
+        SpamComplaints:
+          type: integer
+        SpamComplaintsRate:
+          type: number
+        Opens:
+          type: integer
+        UniqueOpens:
+          type: integer
+        Tracked:
+          type: integer
+        WithOpenTracking:
+          type: integer
+        LinksClicked:
+          type: integer
+        UniqueLinksClicked:
+          type: integer
+        TotalClicks:
+          type: integer
+    BounceStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        HardBounce:
+          type: integer
+        Transient:
+          type: integer
+        Unsubscribe:
+          type: integer
+        Subscribe:
+          type: integer
+        AutoResponder:
+          type: integer
+        AddressChange:
+          type: integer
+        DnsError:
+          type: integer
+        SpamNotification:
+          type: integer
+        OpenRelayTest:
+          type: integer
+        Unknown:
+          type: integer
+        SoftBounce:
+          type: integer
+        VirusNotification:
+          type: integer
+        ChallengeVerification:
+          type: integer
+        SpamComplaint:
+          type: integer
+        ManuallyDeactivated:
+          type: integer
+        Unconfirmed:
+          type: integer
+        Blocked:
+          type: integer
+        SMTPApiError:
+          type: integer
+        InboundError:
+          type: integer
+        DMARCPolicy:
+          type: integer
+        TemplateRenderingFailed:
+          type: integer
+    TrackedStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        Tracked:
+          type: integer
+        NotTracked:
+          type: integer
+    OpenStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        Unique:
+          type: integer
+        Total:
+          type: integer
+    ClickStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        Unique:
+          type: integer
+        Total:
+          type: integer
+        HTML:
+          type: integer
+        Text:
+          type: integer
+    UsageStatsResponse:
+      type: object
+      properties:
+        Days:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        Clients:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        Platforms:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    ClickLocationStatsResponse:
+      type: object
+      properties:
+        HTML:
+          type: integer
+        Text:
+          type: integer
+    ServerConfiguration:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        ApiTokens:
+          type: array
+          items:
+            type: string
+        Color:
+          type: string
+        SmtpApiActivated:
+          type: boolean
+        RawEmailEnabled:
+          type: boolean
+        DeliveryType:
+          type: string
+        ServerLink:
+          type: string
+        InboundAddress:
+          type: string
+        InboundHookUrl:
+          type: string
+        BounceHookUrl:
+          type: string
+        OpenHookUrl:
+          type: string
+        DeliveryHookUrl:
+          type: string
+        PostFirstOpenOnly:
+          type: boolean
+        InboundDomain:
+          type: string
+        InboundHash:
+          type: string
+        InboundSpamThreshold:
+          type: integer
+        TrackOpens:
+          type: boolean
+        TrackLinks:
+          $ref: '#/components/schemas/TrackLinks'
+        IncludeBounceContentInHook:
+          type: boolean
+        ClickHookUrl:
+          type: string
+        EnableSmtpApiErrorHooks:
+          type: boolean
+    EditServerConfigurationRequest:
+      type: object
+      properties:
+        Name:
+          type: string
+        Color:
+          type: string
+          enum:
+            - Purple
+            - Blue
+            - Turquoise
+            - Green
+            - Red
+            - Yellow
+            - Grey
+            - Orange
+        RawEmailEnabled:
+          type: boolean
+        DeliveryHookUrl:
+          type: string
+        SmtpApiActivated:
+          type: boolean
+        InboundHookUrl:
+          type: string
+        BounceHookUrl:
+          type: string
+        OpenHookUrl:
+          type: string
+        PostFirstOpenOnly:
+          type: boolean
+        TrackOpens:
+          type: boolean
+        TrackLinks:
+          $ref: '#/components/schemas/TrackLinks'
+        ClickHookUrl:
+          type: string
+        InboundDomain:
+          type: string
+        InboundSpamThreshold:
+          type: integer
+        IncludeBounceContentInHook:
+          type: boolean
+        EnableSmtpApiErrorHooks:
+          type: boolean
+    TemplateListResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        Templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+    Template:
+      type: object
+      additionalProperties: true
+      properties:
+        TemplateId:
+          type: integer
+        Name:
+          type: string
+        Alias:
+          type: string
+        Subject:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+        AssociatedServerId:
+          type: integer
+        Active:
+          type: boolean
+    CreateTemplateRequest:
+      type: object
+      required:
+        - Name
+        - Subject
+      properties:
+        Name:
+          type: string
+        Alias:
+          type: string
+        Subject:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+    EditTemplateRequest:
+      type: object
+      properties:
+        Name:
+          type: string
+        Alias:
+          type: string
+        Subject:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+    TemplateValidationRequest:
+      type: object
+      properties:
+        Subject:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+        TestRenderModel:
+          type: object
+          additionalProperties: true
+    TemplateValidationResponse:
+      type: object
+      properties:
+        AllContentIsValid:
+          type: boolean
+        HtmlBody:
+          $ref: '#/components/schemas/TemplateValidationResult'
+        TextBody:
+          $ref: '#/components/schemas/TemplateValidationResult'
+        Subject:
+          $ref: '#/components/schemas/TemplateValidationResult'
+        SuggestedTemplateModel:
+          type: object
+          additionalProperties: true
+    TemplateValidationResult:
+      type: object
+      properties:
+        ContentIsValid:
+          type: boolean
+        RenderedContent:
+          type: string
+        ValidationErrors:
+          type: array
+          items:
+            type: string
+    InboundRuleListResponse:
+      type: object
+      properties:
+        TotalCount:
+          type: integer
+        InboundRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboundRule'
+    InboundRule:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Rule:
+          type: string
+        CreatedAt:
+          type: string
+          format: date-time
+    CreateInboundRuleRequest:
+      type: object
+      required:
+        - Rule
+      properties:
+        Rule:
+          type: string
+          description: Email address or domain for the inbound rule.

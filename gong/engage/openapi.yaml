@@ -1,0 +1,808 @@
+openapi: 3.0.3
+info:
+  title: Gong Engage API
+  version: 1.0.0
+  description: Manage Gong Engage flows, folders, prospects, and flow assignments.
+servers:
+- url: https://{gongBaseUrl}
+  variables:
+    gongBaseUrl:
+      default: api.gong.io
+      description: Use the Gong API base URL shown in Gong company API settings.
+security:
+- gongBearerAuth: []
+tags:
+- name: Engage Flows
+  description: Manage Gong Engage flows, flow folders, and prospect flow assignments.
+paths:
+  "/v2/flows":
+    get:
+      tags:
+      - Engage Flows
+      summary: List Gong Engage flows (/v2/flows)
+      description: "Engage flows have the following visibility types: \n\n* Company: visible to everyone in the company, can only be edited by users with edit permissions. \n\n* Personal: reps can set up their own flows which are only available to them. \n\n* Shared: reps can share a flow with other reps. Those reps can then add leads to the flow. \n\nThis endpoint returns all company flows, together with personal flows and flows shared with the user specified in the flowEmailOwner parameter. \n\nAlternatively this endpoint can return the flows most recently assigned by the user.\n\nWhen accessed through a Bearer token authorization method, use the 'api:flows:read' scope.\n\nRequired bearer token scope: api:flows:read."
+      operationId: EngageFlows_listFlows
+      parameters:
+      - name: flowOwnerEmail
+        in: query
+        description: Email of the Gong user whose personal flows and flows shared with the user you want to return.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: test@test.com
+      - name: cursor
+        in: query
+        description: When paging is needed, provide the value supplied by the previous API call to bring the following page of records.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: eyJhbGciOiJIUzI1NiJ9.eyJjYWxsSWQiM1M30.6qKwpOcvnuweTZmFRzYdtjs_YwJphJU4QIwWFM
+      - name: workspaceId
+        in: query
+        description: Optional Workspace identifier, if supplied the API will return only the flows belonging to this workspace.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 623457276584334
+      - name: folderId
+        in: query
+        description: Optional Folder identifier, if supplied the API will return only the flows belonging to this particular folder.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 1695493301223573465
+      - name: mostRecentlyAssigned
+        in: query
+        description: Optional flag, if supplied the API will return only the most recently assigned flows capped at 20.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+        example: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FlowsResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/v2/flows/folders":
+    get:
+      tags:
+      - Engage Flows
+      summary: List Gong Engage flow folders (/v2/flows/folders)
+      description: "Engage flow folders have the following visibility types: \n\n* Company: visible to everyone in the company, can only be edited by users with edit permissions. \n\n* Personal: reps can set up their own flow folders which are only available to them. \n\n* Shared: reps can share a flow folder with other reps. Those reps can then add flows to the flow folder. \n\nThis endpoint returns all company flow folders, together with personal flow folders and flow folders shared with the user specified in the flowEmailOwner parameter. \n\nWhen accessed through a Bearer token authorization method, use the 'api:flows:read' scope.\n\nRequired bearer token scope: api:flows:read."
+      operationId: EngageFlows_listFlowsFolders
+      parameters:
+      - name: flowFolderOwnerEmail
+        in: query
+        description: Email of the Gong user whose personal flows folders and flows folders shared with the user you want to return.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: test@test.com
+      - name: cursor
+        in: query
+        description: When paging is needed, provide the value supplied by the previous API call to bring the following page of records.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: eyJhbGciOiJIUzI1NiJ9.eyJjYWxsSWQiM1M30.6qKwpOcvnuweTZmFRzYdtjs_YwJphJU4QIwWFM
+      - name: parentId
+        in: query
+        description: Optional folder identifier, if supplied the API will return only this folder and the child folders of this folder.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+        example: eyJhbGciOiJIUzI1NiJ9.eyJjYWxsSWQiM1M30.6qKwpOcvnuweTZmFRzYdtjs_YwJphJU4QIwWFM
+      - name: workspaceId
+        in: query
+        description: Optional Workspace identifier, if supplied the API will return only the flows belonging to this workspace.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 623457276584334
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FlowsResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/v2/flows/prospects":
+    post:
+      tags:
+      - Engage Flows
+      summary: List prospects assigned flows (/v2/flows/prospects)
+      description: |-
+        Get the Gong Engage flows assigned to the given crmProspectsIds.
+
+        When querying by crmProspectsIds, only open (Pending/Running/Paused) flows are returned.
+
+        Alternatively this endpoint can be used to get the flows assigned to prospects by the given flowInstanceIds.
+
+        When querying by flowInstanceIds, all flows including finished ones are returned.
+
+        When accessed through a Bearer token authorization method, this endpoint requires the scope 'api:flows:read'.
+
+        Required bearer token scope: api:flows:read.
+      operationId: EngageFlows_getProspectsAssignedFlows
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProspectsAssignedFlowsRequestV2"
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProspectsFlowsResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/v2/flows/prospects/assign":
+    post:
+      tags:
+      - Engage Flows
+      summary: Assign prospects (contacts or leads) to an Engage flow  (/v2/flows/prospects/assign)
+      description: |-
+        Use this endpoint to assign a number of prospects to a flow. Prospects can be contacts or leads in your CRM.
+
+        Generate a list of comma separated CRM Ids of the prospects you want to add to a flow. The flowInstanceOwnerEmail parameter is the email address of the Gong user who set up the flow instance and owns the flow to-dos.
+
+        You can assign up to 100 prospects to a flow in a single request.
+
+        When accessed through a Bearer token authorization method, this endpoint requires the scope 'api:flows:write'.
+
+        Required bearer token scope: api:flows:write.
+      operationId: EngageFlows_assignProspects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AssignFlowRequestV2"
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/AssignFlowResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/v2/flows/prospects/unassign-flows-by-crm-id":
+    post:
+      tags:
+      - Engage Flows
+      summary: Unassign flows by CRM Prospect ID  (/v2/flows/prospects/unassign-flows-by-crm-id)
+      description: "This endpoint lets you remove a specific prospect from the flows they are assigned to.\n\nTo remove the prospect from all flows they are assigned to, send the crmProspectId only. \n\nIf you want to remove the prospect from a specific flow, get the flow id from the /v2/flows/prospects endpoint and include the crmProspectId and flowId in the request.\n\nThe Ids of the flows the prospect was successfully removed from are returned in the response.\n\nWhen accessed through a Bearer token authorization method, this endpoint requires the scope 'api:flows:write'.\n\nRequired bearer token scope: api:flows:write."
+      operationId: EngageFlows_unassignProspectFlows
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UnassignProspectFlowsRequest"
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnassignFlowsResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/v2/flows/prospects/unassign-flows-by-instance-id":
+    post:
+      tags:
+      - Engage Flows
+      summary: Unassign flows by Flow Instance ID  (/v2/flows/prospects/unassign-flows-by-instance-id)
+      description: |-
+        This endpoint lets you specify flow instances to remove prospects from.
+
+        A flow instance is created when a prospect is added to a flow. Retrieve the flow instance Id from the /v2/flows/prospects endpoint.
+
+        The flow instance Ids the prospect was successfully removed from are returned in the response. If a prospect could not be removed from the flow for any reason, the Id isn’t returned in the response and the prospect is still assigned to the flow.
+
+        You can remove prospects from up to 200 flows in a single request.
+
+        When accessed through a Bearer token authorization method, this endpoint requires the scope 'api:flows:write'.
+
+        Required bearer token scope: api:flows:write.
+      operationId: EngageFlows_unassignFlows
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UnassignFlowsRequest"
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnassignFlowsResponse"
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '429':
+          description: API request limit exceeded
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before making a new request.
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+        '500':
+          description: Failed to complete the operation due to an unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    AssignFlowRequestV2:
+      required:
+      - crmProspectsIds
+      - flowId
+      - flowInstanceOwnerEmail
+      type: object
+      properties:
+        crmProspectsIds:
+          uniqueItems: true
+          type: array
+          description: The CRM IDs of the contact or lead that should be assigned to a flow.
+          example:
+          - a5V1Q00A120DP4CVAW
+          items:
+            type: string
+            description: The CRM IDs of the contact or lead that should be assigned to a flow.
+            example: '["a5V1Q00A120DP4CVAW"]'
+        flowId:
+          type: string
+          description: The Engage Flow ID to assign the contacts to.
+          example: '1695493301223590792'
+        flowInstanceOwnerEmail:
+          type: string
+          description: The email of the Gong user who owns the flow to-dos.
+          example: test@test.com
+        overrides:
+          "$ref": "#/components/schemas/AssignOverrides"
+        flowInstanceDescription:
+          type: string
+          description: The description for the flow instance (in Beta Phase).
+          example: Your goal with this flow is to <b>schedule a follow-up conversation</b> with event attendees to gather feedback and progress them toward becoming potential customers. The target audience are <b>RevOps</b> who attended the latest event in Stockholm, part of EMEA marketing initiatives.
+      description: Flow assignment parameters.
+    AssignFlowResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: A Gong request reference Id, generated for this request. Can be used for troubleshooting purposes.
+          example: 4al018gzaztcr8nbukw
+        prospectsAssigned:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PublicApiAssignedFlow"
+        prospectsNotAssigned:
+          type: array
+          items:
+            "$ref": "#/components/schemas/AssignedFlowFailure"
+    AssignOverrides:
+      type: object
+      properties:
+        steps:
+          type: array
+          description: The steps in the flow to override. The step subject and body can be updated.
+          items:
+            "$ref": "#/components/schemas/PublicApiStepContentOverride"
+        flowInstanceVariables:
+          type: array
+          description: The flow variables to update. Changes to these variables are applied to the entire flow.
+          items:
+            "$ref": "#/components/schemas/PublicApiVariableValueOverride"
+        coolOffOverride:
+          type: boolean
+          description: To assign prospects to the flow regardless of the cool off status.
+      description: Defines the new data for specific steps and variables in the flow (in Beta Phase).
+    AssignedFlowFailure:
+      type: object
+      properties:
+        flowId:
+          type: string
+          description: The flow ID to which the assignment failed
+          example: '1695493301223590792'
+        crmProspectId:
+          type: string
+          description: The CRM ID of the prospect that failed to get assigned to a Gong Engage flow.
+          example: a5V1Q00A120DP4CVAW
+        errorCode:
+          type: string
+          description: The code of the assignment error
+          example: InvalidArgument
+          enum:
+          - InvalidArgument
+          - InvalidState
+          - UnexpectedError
+        errorMessage:
+          type: string
+          description: A message describing the assignment error
+          example: Invalid crmId <not-a-crm-id>
+    ErrorResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: A Gong request reference Id, generated for this request. Can be used for troubleshooting purposes.
+          example: 4al018gzaztcr8nbukw
+        errors:
+          type: array
+          description: Error messages.
+          example:
+          - An error has occurred
+          items:
+            type: string
+    FlowsResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: A Gong request reference Id, generated for this request. Can be used for troubleshooting purposes.
+          example: 4al018gzaztcr8nbukw
+        records:
+          "$ref": "#/components/schemas/Records"
+        flows:
+          type: array
+          description: A list, in which each item specifies one Flow.
+          items:
+            "$ref": "#/components/schemas/PublicApiFlow"
+    ProspectsAssignedFlowsRequestV2:
+      type: object
+      properties:
+        crmProspectsIds:
+          uniqueItems: true
+          type: array
+          description: CRM IDs of the prospects to list assigned flows for.
+          example:
+          - a5V1Q00A120DP4CVAW
+          items:
+            type: string
+            description: CRM IDs of the prospects to list assigned flows for.
+            example: '["a5V1Q00A120DP4CVAW"]'
+        flowInstanceIds:
+          uniqueItems: true
+          type: array
+          description: Assigned flow instance IDs.
+          example:
+          - '234599484848423'
+          items:
+            type: string
+            description: Assigned flow instance IDs.
+            example: '["234599484848423"]'
+      description: Prospects assigned flows request
+    ProspectsFlowsResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: A Gong request reference Id, generated for this request. Can be used for troubleshooting purposes.
+          example: 4al018gzaztcr8nbukw
+        prospectsAssigned:
+          type: array
+          description: The flow instances assigned to the given prospects
+          items:
+            "$ref": "#/components/schemas/PublicApiAssignedFlow"
+    PublicApiAssignedFlow:
+      type: object
+      properties:
+        flowId:
+          type: string
+          description: The Gong Engage Flow ID the prospect was assigned to.
+          example: '1695493301223590792'
+        flowName:
+          type: string
+          description: The Gong Engage Flow name the prospect was assigned to.
+          example: SDR Flow
+        crmProspectId:
+          type: string
+          description: The CRM ID of the prospect that was assigned to a Gong Engage flow.
+          example: a5V1Q00A120DP4CVAW
+        flowInstanceId:
+          type: string
+          description: The newly created flow instance id.
+          example: '1234361284629356'
+        flowInstanceOwnerEmail:
+          type: string
+          description: The email address of the Gong user who owns the flow instance tasks.
+          example: test@test.com
+        flowInstanceOwnerFullName:
+          type: string
+          description: 'The full name of the Gong user who owns the flow instance tasks.
+
+'
+          example: Test User
+        flowInstanceCreateDate:
+          type: string
+          description: 'The creation date of the flow instance in the ISO-8601 format, for example: ''2024-01-17T16:20:05-03:00'' or ''2016-02-16T03:57:04.834+05:30'' or ''2020-11-20T21:30:07.233692Z'', where Z stands for UTC.'
+          example: '2019-01-20T00:00:00-08:00'
+        flowInstanceStatus:
+          type: string
+          description: The status of the flow instance.
+          example: Running
+          enum:
+          - Pending
+          - Running
+          - Paused
+          - FinishedNoReply
+          - FinishedResponse
+          - Finished
+        workspaceId:
+          type: string
+          description: The workspace ID this flow belongs to.
+          example: '623457276584334'
+        exclusive:
+          type: boolean
+          description: Indicates whether a prospect in this flow can be added to other flows
+          example: true
+    PublicApiFlow:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the flow
+          example: '1695493301223590792'
+        name:
+          type: string
+          description: The name of the flow
+          example: Personal Flow
+        folderId:
+          type: string
+          description: The id of the folder this flow is under
+          example: '1695493301223573465'
+        folderName:
+          type: string
+          description: The name of the folder this flow is under
+          example: '1695493301223573465'
+        visibility:
+          type: string
+          description: The flow visibility type
+          enum:
+          - Company
+          - Personal
+          - Shared
+        creationDate:
+          type: string
+          description: Creation time of the flow in ISO-8601 format (e.g., '2018-02-18T02:30:00-07:00' or '2018-02-18T08:00:00Z', where Z stands for UTC).
+          example: '2018-02-17T02:30:00-08:00'
+        exclusive:
+          type: boolean
+          description: indicates whether a prospect in this flow can be added to other flows
+          example: true
+      description: A list, in which each item specifies one Flow.
+    PublicApiStepContentOverride:
+      required:
+      - number
+      type: object
+      properties:
+        number:
+          type: integer
+          description: The number of the step to update in the flow. The first step in the flow is 1.
+          format: int32
+          example: 1
+        subject:
+          type: string
+          description: The new subject for the step.
+          example: Initial Call with {{account_name}}
+        body:
+          type: string
+          description: The new body for the step.
+          example: "<div>Hello {{recipient.first_name}}</div>"
+      description: The steps in the flow to override. The step subject and body can be updated.
+    PublicApiVariableValueOverride:
+      required:
+      - name
+      - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the variable you want to update.
+          example: recipient.first_name
+        value:
+          type: string
+          description: The new value for the variable.
+          example: Mike
+      description: The flow variables to update. Changes to these variables are applied to the entire flow.
+    Records:
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          description: Total number of records.
+          format: int32
+          example: 263
+        currentPageSize:
+          type: integer
+          description: Number of records in the current page.
+          format: int32
+          example: 100
+        currentPageNumber:
+          type: integer
+          description: Current page number.
+          format: int32
+          example: 0
+        cursor:
+          type: string
+          description: Returned only when there are more records to be retrieved. Repeat the API call and pass this cursor value in the request to retrieve the next page of records.
+          example: eyJhbGciOiJIUzI1NiJ9.eyJjYWxsSWQiM1M30.6qKwpOcvnuweTZmFRzYdtjs_YwJphJU4QIwWFM
+      description: Information about the number of records that match the requested filter.
+    UnassignFlowsRequest:
+      required:
+      - flowInstanceIds
+      type: object
+      properties:
+        flowInstanceIds:
+          uniqueItems: true
+          type: array
+          description: The unique identifiers of the flows that prospects should be removed from.
+          example:
+          - '234599484848423'
+          items:
+            type: string
+        unassignedByUserEmail:
+          type: string
+          description: "(Optional) The email address of the Gong user requesting to remove prospects from the flow instance. This is not the email of the prospect being removed from the flow."
+          example: test@test.com
+      description: Unassign flows by Flow Instance ID request.
+    UnassignFlowsResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: A Gong request reference Id, generated for this request. Can be used for troubleshooting purposes.
+          example: 4al018gzaztcr8nbukw
+        unassignedFlowInstanceIds:
+          uniqueItems: true
+          type: array
+          description: Set of flow instance ids prospects were successfully removed from.
+          example:
+          - '234599484848423'
+          items:
+            type: string
+    UnassignProspectFlowsRequest:
+      required:
+      - crmProspectId
+      type: object
+      properties:
+        crmProspectId:
+          type: string
+          description: The CRM ID of the prospect to unassign.
+          example: a5V1Q00A120DP4CVAW
+        flowId:
+          type: string
+          description: The identifier of the flow to unassign the prospect from.
+          example: '1695493301223590792'
+        unassignedByUserEmail:
+          type: string
+          description: "(Optional) The email address of the Gong user requesting to remove prospects from the flow instance. This is not the email of the prospect being removed from the flow."
+          example: test@test.com
+      description: Unassign flows by CRM Prospect ID request.
+  securitySchemes:
+    gongBearerAuth:
+      type: http
+      scheme: bearer
